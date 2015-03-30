@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Destiny Companion",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Robust extension to keep open while you play destiny",
+    "description": "The description of the application"
+  }
+}
