@@ -1,3 +1,14 @@
 body {
   padding: 20px;
 }
+
+.item {
+  width: 75px;
+  float: left;
+  margin-right: 2px;
+  border: solid 2px #fff;
+}
+
+.item img {
+  width: 100%;
+}
