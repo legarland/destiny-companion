@@ -1,4 +1,4 @@
-angular.module('myApp', []).controller('MainController', function ($scope, bungie, utils, $filter) {
+angular.module('myApp', ['angular.filter']).controller('MainController', function ($scope, bungie, utils, $filter) {
 
   $scope.user = {};
   $scope.vault = 'loading';
@@ -8,7 +8,6 @@ angular.module('myApp', []).controller('MainController', function ($scope, bungi
 
   // Load initial user
   bungie.user(function (u) {
-    console.log(u);
 
     if (u.error) {
 
@@ -54,8 +53,10 @@ angular.module('myApp', []).controller('MainController', function ($scope, bungi
 //          }
           
           // Load Character Inventory
-          bungie.inventory(avatars[c].characterBase.characterId, function(i) {
-            utils.appendItems(avatars[c].characterBase.characterId, utils.flattenInventory(i.data), $scope.inventory);
+					var id = avatars[c].characterBase.characterId;
+					console.log(id);
+          bungie.inventory(id, function(i) {
+            utils.appendItems(id, utils.flattenInventory(i.data), $scope.inventory);
             $scope.$apply();
           });
         }
@@ -63,7 +64,6 @@ angular.module('myApp', []).controller('MainController', function ($scope, bungi
         $scope.$apply();
       });
 
-      $scope.characters = e.data.characters;
       $scope.$apply();
     });
   }
