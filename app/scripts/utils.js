@@ -54,7 +54,7 @@ angular.module('myApp').service('utils', function () {
       if (itemDef === undefined) {
         continue;
       }
-
+      
       dataTo.push({
         owner: owner,
         hash: item.itemHash,
@@ -76,8 +76,6 @@ angular.module('myApp').service('utils', function () {
       });
       
     }
-    
-    console.log(dataTo);
   }
 
 });

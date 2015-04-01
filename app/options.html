@@ -29,16 +29,31 @@
 
 	<div ng-bind="getMoteCount()"></div>
 
+  <select ng-model="rarityFilter">
+    <option selected value="">-- No Filter --</option>
+    <option value="Legendary">Legendary</option>
+    <option value="Exotic">Exotic</option>
+    <option value="Rare">Rare</option>
+    <option value="Uncommon">Uncommon</option>
+  </select>
+  
+  <select ng-model="typeFilter">
+    <option selected value="">-- No Filter --</option>
+    <option value="Primary Weapons">Primary Weapon</option>
+    <option value="Special Weapons">Special Weapon</option>
+    <option value="Heavy Weapons">Heavy Weapon</option>
+    <option value="Consumables">Consumables</option>
+    <option value="Shaders">Shaders</option>
+  </select>
+
 	<div ng-repeat="(key,value) in inventory | groupBy: 'owner'">
-		<div class="clearfix">
+		<div style="clear: both">
 			<h4>{{ key }}</h4>
 
-			<div class="item" ng-repeat="item in value"><img title="{{ item }}" ng-src="http://bungie.net{{ item.icon }}" />
+			<div class="item" ng-repeat="item in value | filter: { tier: rarityFilter, bucket: typeFilter }"><img title="{{ item }}" ng-src="http://bungie.net{{ item.icon }}" />
 			</div>
 		</div>
 	</div>
-
-	{{ avatars }}
 
 	<!-- build:js scripts/vendor.js -->
 	<!-- bower:js -->

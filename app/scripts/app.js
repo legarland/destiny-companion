@@ -1,4 +1,4 @@
-angular.module('myApp', ['angular.filter']).controller('MainController', function ($scope, bungie, utils, $filter) {
+angular.module('myApp', ['angular.filter']).controller('MainController', function ($scope, bungie, utils, $filter, $timeout) {
 
   $scope.user = {};
   $scope.vault = 'loading';
@@ -21,6 +21,7 @@ angular.module('myApp', ['angular.filter']).controller('MainController', functio
     loadUser();
   });
 
+  // Loads the user from bungie which then triggers the loading of inventory, vault, etc.
   function loadUser() {
 
     // Grab user info
@@ -43,7 +44,7 @@ angular.module('myApp', ['angular.filter']).controller('MainController', functio
         var avatars = e.data.characters;
         loader.characters = avatars.length;
 
-        for (var c in avatars) {
+        for (var c = 0; c<avatars.length; c++) {
           // move.appendChild();
           //_storage[avatars[c].characterBase.characterId] = {
 //            icon: avatars[c].emblemPath,
@@ -53,16 +54,21 @@ angular.module('myApp', ['angular.filter']).controller('MainController', functio
 //          }
           
           // Load Character Inventory
-					var id = avatars[c].characterBase.characterId;
-					console.log(id);
-          bungie.inventory(id, function(i) {
-            utils.appendItems(id, utils.flattenInventory(i.data), $scope.inventory);
-            $scope.$apply();
-          });
+					var id2 = avatars[c].characterBase.characterId;
+					loadInventory(id2);       
+          
         }
 
-        $scope.$apply();
       });
+
+    });
+  }
+  
+  function loadInventory(c) {
+     bungie.inventory(c, function(i) {
+      utils.appendItems(c, utils.flattenInventory(i.data), $scope.inventory);
+
+      console.log('character: ' + c + ' - ' + i.data);
 
       $scope.$apply();
     });
