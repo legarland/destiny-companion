@@ -4,6 +4,7 @@ angular.module('myApp', ['angular.filter']).controller('MainController', functio
   $scope.vault = 'loading';
   $scope.characters = 'loading';
   $scope.inventory = [];
+  $scope.utils = utils;
   var loader = { loaded: 0,	characters: 0 };
 
   // Load initial user

@@ -1,8 +1,9 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
+  "web_accessible_resources": ["images/arc.png", "images/solar.png", "images/void.png"],
   "icons": {
     "16": "images/icon-16.png",
     "128": "images/icon-128.png"

@@ -2,21 +2,16 @@
 <html ng-app="myApp" ng-csp="">
 
 <head>
-	<!-- build:css styles/vendor.css -->
-	<!-- bower:css -->
-	<!-- endbower -->
-	<!-- endbuild -->
-	<!-- build:css styles/main.css -->
-	<link href="styles/main.css" rel="stylesheet">
-	<!-- endbuild -->
-	<script type="text/javascript" src="bower_components/angularjs/angular.js"></script>
-	<script type="text/javascript" src="bower_components/angular-filter/dist/angular-filter.js"></script>
-	<script type="text/javascript" src="scripts/app.js"></script>
-	<script type="text/javascript" src="scripts/bungie.js"></script>
-	<script type="text/javascript" src="scripts/utils.js"></script>
-	<script type="text/javascript" src="scripts/itemdef.json"></script>
-	<script type="text/javascript" src="scripts/collection.json"></script>
-	<script type="text/javascript" src="scripts/statdef.json"></script>
+  <!-- build:css styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css styles/main.css -->
+  <link href="styles/main.css" rel="stylesheet">
+  <!-- endbuild -->
+
+
 
 
 
@@ -24,47 +19,70 @@
 
 <body ng-controller="MainController">
 
-	<div id="user">{{ user.gamerTag }}</div>
-	<br/>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <div ng-repeat="item in characters"></div>
+      </div>
+      <div class="col-md-8">
+        <select ng-model="rarityFilter">
+          <option selected value="">-- No Filter --</option>
+          <option value="Legendary">Legendary</option>
+          <option value="Exotic">Exotic</option>
+          <option value="Rare">Rare</option>
+          <option value="Uncommon">Uncommon</option>
+        </select>
 
-	<div ng-bind="getMoteCount()"></div>
+        <select ng-model="typeFilter">
+          <option selected value="">-- No Filter --</option>
+          <option value="Primary Weapons">Primary Weapon</option>
+          <option value="Special Weapons">Special Weapon</option>
+          <option value="Heavy Weapons">Heavy Weapon</option>
+          <option value="Consumables">Consumables</option>
+          <option value="Shaders">Shaders</option>
+        </select>
 
-  <select ng-model="rarityFilter">
-    <option selected value="">-- No Filter --</option>
-    <option value="Legendary">Legendary</option>
-    <option value="Exotic">Exotic</option>
-    <option value="Rare">Rare</option>
-    <option value="Uncommon">Uncommon</option>
-  </select>
-  
-  <select ng-model="typeFilter">
-    <option selected value="">-- No Filter --</option>
-    <option value="Primary Weapons">Primary Weapon</option>
-    <option value="Special Weapons">Special Weapon</option>
-    <option value="Heavy Weapons">Heavy Weapon</option>
-    <option value="Consumables">Consumables</option>
-    <option value="Shaders">Shaders</option>
-  </select>
+        <div ng-repeat="(key,value) in inventory | groupBy: 'owner'">
+          <div style="clear: both">
+            <h4>{{ key }}</h4>
 
-	<div ng-repeat="(key,value) in inventory | groupBy: 'owner'">
-		<div style="clear: both">
-			<h4>{{ key }}</h4>
-
-			<div class="item" ng-repeat="item in value | filter: { tier: rarityFilter, bucket: typeFilter }"><img title="{{ item }}" ng-src="http://bungie.net{{ item.icon }}" />
-			</div>
-		</div>
-	</div>
-
-	<!-- build:js scripts/vendor.js -->
-	<!-- bower:js -->
-	<!-- endbower -->
-	<!-- endbuild -->
+            <div class="item ng-class:{ 'full': item.complete }" ng-repeat="item in value | filter: { tier: rarityFilter, bucket: typeFilter }">
+              <img title="{{ item }}" ng-src="http://bungie.net{{ item.icon }}" />
+              <div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
+              <span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
+              <span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
+          <img ng-if="item.damageType == 2" src="images/arc.png" />
+          <img ng-if="item.damageType == 3" src="images/solar.png" />
+          <img ng-if="item.damageType == 4" src="images/void.png" />
+        </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
-	<!-- build:js scripts/options.js -->
-	<script src="scripts/options.js"></script>
-	<!-- endbuild -->
+  <!-- build:js scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <script type="text/javascript" src="bower_components/angular-filter/dist/angular-filter.js"></script>
+  <script type="text/javascript" src="scripts/app.js"></script>
+  <script type="text/javascript" src="scripts/bungie.js"></script>
+  <script type="text/javascript" src="scripts/utils.js"></script>
+  <script type="text/javascript" src="scripts/itemdef.json"></script>
+  <script type="text/javascript" src="scripts/collection.json"></script>
+  <script type="text/javascript" src="scripts/statdef.json"></script>
+
+  <!-- build:js scripts/options.js -->
+  <script src="scripts/options.js"></script>
+  <!-- endbuild -->
 </body>
 
 </html>
