@@ -150,6 +150,32 @@ angular.module('myApp').service('bungie', function () {
       complete: callback
     });
   }
+	this.activities = function (characterId, callback) {
+		_request({
+      route: '/Destiny/' + active.type +
+        '/Account/' + membershipId +
+        '/Character/' + characterId +
+        '/Activities/?definitions=false',
+      method: 'GET',
+      complete: callback
+    });
+	}
+	this.advisors = function (callback) {
+		_request({
+      route: '/Destiny/Advisors/',
+      method: 'GET',
+      complete: callback
+    });
+	}
+	this.characterAdvisors = function (characterId, callback) {
+		_request({
+      route: '/Destiny/' + active.type +
+        '/MyAccount/Character/' + characterId +
+        '/Advisors/',
+      method: 'GET',
+      complete: callback
+    });
+	}
   this.inventory = function (characterId, callback) {
     _request({
       route: '/Destiny/' + active.type +

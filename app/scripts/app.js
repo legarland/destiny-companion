@@ -1,89 +1,138 @@
-angular.module('myApp', ['angular.filter']).controller('MainController', function ($scope, bungie, utils, $filter, $timeout) {
+angular.module('myApp', ['angular.filter', 'ngCookies']).controller('MainController', function ($scope, bungie, utils, $filter, $timeout) {
 
-  $scope.user = {};
-  $scope.vault = 'loading';
-  $scope.characters = 'loading';
-  $scope.inventory = [];
-  $scope.utils = utils;
-  var loader = { loaded: 0,	characters: 0 };
+	$scope.user = {};
+	$scope.vault = 'loading';
+	$scope.characters = [];
+	$scope.inventory = [];
+	$scope.utils = utils;
+	$scope.selectedOwner = '';
+	
+	var advisors = [];
+	var nightfallHash;
 
-  // Load initial user
-  bungie.user(function (u) {
+	// Used to handle the click event of the character card.
+	$scope.selectOwner = function (id) {
+		if ($scope.selectedOwner == id) {
+			$scope.selectedOwner = '';
+		} else {
+			$scope.selectedOwner = id;
+		}
+	}
 
-    if (u.error) {
+	function checkNightfallCompletion(characterId) {
+		var char = findCharacterById(characterId);
+		
+		var nightfall = char.activities.activityAdvisors[nightfallHash].nightfall;
+		console.log(nightfall);
+		var isComplete = nightfall.tiers[0].isCompleted;
+		char.nightfall = isComplete;
+		console.log('nightfall: ' + isComplete);
+		$scope.$apply();
+	}
 
-      // TODO: Tell User to login.
+	// Load initial user
+	bungie.user(function (u) {
 
-      return;
-    }
+		if (u.error) {
 
-    $scope.user = u;
-    $scope.$apply();
-    loadUser();
-  });
+			// TODO: Tell User to login.
 
-  // Loads the user from bungie which then triggers the loading of inventory, vault, etc.
-  function loadUser() {
+			return;
+		}
 
-    // Grab user info
-    bungie.search(function (e) {
-      if (e.error) {
-        printError('Bungie.net user found, but was unable to find your linked ' + (bungie.active().type == 1 ? 'Xbox' : 'PSN') + ' account.');
-        return;
-      }
+		$scope.user = u;
+		$scope.$apply();
+		loadUser();
+	});
 
-      // Load the vault
-      bungie.vault(function (v) {
-        if (v === undefined) {
-          printError('Bungie.net user found, but was unable to find your linked ' + (bungie.active().type == 1 ? 'Xbox' : 'PSN') + ' account.');
-          return;
-        }
-        
-        $scope.inventory = [];
-        utils.appendItems('vault', utils.flattenVault(v.data), $scope.inventory);
+	// Loads the user from bungie which then triggers the loading of inventory, vault, etc.
+	function loadUser() {
 
-        var avatars = e.data.characters;
-        loader.characters = avatars.length;
+		bungie.advisors(function (data) {
+			advisors = data.data;
+			nightfallHash = advisors.nightfallActivityHash
+		});
+		
+		// Grab user info
+		bungie.search(function (e) {
+			if (e.error) {
+				printError('Bungie.net user found, but was unable to find your linked ' + (bungie.active().type == 1 ? 'Xbox' : 'PSN') + ' account.');
+				return;
+			}
 
-        for (var c = 0; c<avatars.length; c++) {
-          // move.appendChild();
-          //_storage[avatars[c].characterBase.characterId] = {
-//            icon: avatars[c].emblemPath,
-//            background: avatars[c].backgroundPath,
-//            level: avatars[c].characterLevel,
-//            class: utils.getClass(avatars[c].characterBase.classType)
-//          }
-          
-          // Load Character Inventory
-					var id2 = avatars[c].characterBase.characterId;
-					loadInventory(id2);       
-          
-        }
+			// Load the vault
+			bungie.vault(function (v) {
+				if (v === undefined) {
+					printError('Bungie.net user found, but was unable to find your linked ' + (bungie.active().type == 1 ? 'Xbox' : 'PSN') + ' account.');
+					return;
+				}
 
-      });
+				$scope.inventory = [];
+				utils.appendItems('vault', utils.flattenVault(v.data), $scope.inventory);
 
-    });
-  }
-  
-  function loadInventory(c) {
-     bungie.inventory(c, function(i) {
-      utils.appendItems(c, utils.flattenInventory(i.data), $scope.inventory);
+				var avatars = e.data.characters;
 
-      console.log('character: ' + c + ' - ' + i.data);
+				for (var c = 0; c < avatars.length; c++) {
+					var currentChar = avatars[c];
+					console.log(currentChar);
+					var id2 = currentChar.characterBase.characterId;
+					$scope.characters.push({
+						id: id2,
+						icon: currentChar.emblemPath,
+						background: currentChar.backgroundPath,
+						level: currentChar.characterLevel,
+						class: utils.getClass(currentChar.characterBase.classType),
+						percentToNextLevel: currentChar.percentToNextLevel
+					});
 
-      $scope.$apply();
-    });
-  }
+					// Load Character Inventory
 
-  $scope.getMoteCount = function() {
-    var arr = $filter('filter')($scope.inventory, {hash: 937555249});
-    var count = 0;
-    for(var x in arr) {
-      var i = arr[x];
-      count += i.amount;
-    }
-    
-    return count;
-  }
+					loadInventory(id2);
+					loadActivities(id2);					
+				}
+
+			});
+
+		});
+	}
+	
+	function loadActivities (id) {
+		bungie.characterAdvisors(id, function(data) {
+			
+			var char = findCharacterById(id);
+			char.activities = data.data;
+			checkNightfallCompletion(id);
+		});
+	}
+
+	function loadInventory(c) {
+		bungie.inventory(c, function (i) {
+			utils.appendItems(c, utils.flattenInventory(i.data), $scope.inventory);
+			$scope.$apply();
+		});
+	}
+	
+	function findCharacterById (id) {
+		for (var i = 0; i < $scope.characters.length; i++) {
+			var char = $scope.characters[i];
+			if (char.id == id) {
+				return char;	
+			}
+		}
+		return undefined;
+	}
+
+	$scope.getMoteCount = function () {
+		var arr = $filter('filter')($scope.inventory, {
+			hash: 937555249
+		});
+		var count = 0;
+		for (var x in arr) {
+			var i = arr[x];
+			count += i.amount;
+		}
+
+		return count;
+	}
 
 });

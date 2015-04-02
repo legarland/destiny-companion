@@ -3,6 +3,77 @@ body {
   padding: 20px;
 }
 
+.character {
+	margin-bottom: 10px;
+}
+
+.character-card {
+	background-size: cover;
+	padding: 5px;
+	color: #fff;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: capitalize;
+	height: 56px;
+	cursor: pointer;
+}
+
+.character-card:hover {
+	box-shadow: 0px 0px 20px 0px rgba(255,255,255, .3);	
+}
+
+.character-card.selected {
+	
+}
+
+.character-card.selected .character-class {
+	margin-left: 20px;
+	transition: .5s;
+}
+
+.character-emblem {
+	float: left; 
+	margin-right: 10px;
+	height: 100%;
+}
+
+.character-class {
+	padding: 5px 0;	
+	float: left;
+	margin-left: 0px;
+	transition: .5s;	
+}
+
+.character-level {
+	float: right;	
+	padding: 5px 0;	
+	padding-right: 10px;
+	color: #f5dc56;
+}
+
+.character-progress {
+	height: 4px;	
+	margin: 0 -5px;
+}
+
+.character-progress-bar {
+	clear: both;
+	background-color: #f5dc56;
+	height: 4px;
+	width: 0;
+}
+
+.character-info {
+	max-height: 0px;
+	transition: .5s;
+	overflow: hidden;
+}
+
+.character-info.selected {
+	max-height: 800px;
+	transition: .5s;
+}
+
 .item {
   width: 75px;
   float: left;
