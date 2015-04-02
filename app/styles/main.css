@@ -26,7 +26,7 @@ body {
 	
 }
 
-.character-card.selected .character-class {
+.character-card.selected  {
 	margin-left: 20px;
 	transition: .5s;
 }
@@ -75,7 +75,7 @@ body {
 }
 
 .item {
-  width: 75px;
+  width: 60px;
   float: left;
   margin-right: 5px;
   margin-bottom: 5px;
@@ -99,6 +99,18 @@ body {
   z-index: 999;
   width: 100%;
   text-shadow: 1px 1px #000;
+}
+
+.item .attack.arc {
+  background-color: #59b0e5;
+}
+
+.item .attack.solar {
+    background-color: #ce5a0c;
+}
+
+.item .attack.void {
+    background-color: #9b61b5;
 }
 
 .item .arc {
@@ -130,4 +142,15 @@ body {
 
 .item.full {
   border-color: #f5dc56;
+}
+
+.bucket-group {
+  margin-bottom: 10px;
+}
+
+.bucket-title {
+  background-color: darkgrey;
+  padding: 3px 5px;
+  font-size: 20px;
+  margin-bottom: 5px;
 }
