@@ -190,7 +190,7 @@
 			</div>
 			<div class="col-md-8">
 
-				<div class="row filters">
+				<div class="row filters" ng-if="false">
 					<div class="col-xs-6">
 						<input class="search-box" ng-model="searchText" />
 					</div>
@@ -222,7 +222,7 @@
 					</div>
 					<div class="col-xs-4" ng-repeat="group in weaponGrouping">
 						<div class="bucket-subtitle">{{ group }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {$:searchText, displayBucket: 'Weapons', bucket: group, owner: selectedOwner, } | orderBy: ['-equipped','order', 'tier', 'name']" title="{{ item }}">
+						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {$:searchText, displayBucket: 'Weapons', bucket: group, owner: selectedOwner, } | orderBy: ['-equipped','order', 'tier', 'name']" title="{{ item }}" popover="{{ item.name }}" popover-trigger="mouseenter" ng-click="openModal(item)">
 							<img local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -241,7 +241,7 @@
 					</div>
 					<div class="col-xs-4" ng-repeat="group in armorGrouping">
 						<div class="bucket-subtitle">{{ group }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: { displayBucket: 'Armor', bucket: group, owner: selectedOwner } | orderBy: ['-equipped', 'order', 'tier', 'name']">
+						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: { displayBucket: 'Armor', bucket: group, owner: selectedOwner } | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter">
 							<img local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -260,7 +260,7 @@
 					</div>
 					<div class="col-xs-6" ng-repeat="(key2, value2) in inventory | itemDisplay: 'Misc' | groupBy: 'bucket' ">
 						<div class="bucket-subtitle">{{ key2 }}</div>
-						<div class="item ng-class:{ 'full': item.complete }" ng-repeat="item in value2 | filter: { owner: selectedOwner } | orderBy: ['order','tier', 'name']" ng-click="moveToVault(item, selectedOwner)" title="{{ item }}">
+						<div class="item ng-class:{ 'full': item.complete }" ng-repeat="item in value2 | filter: { owner: selectedOwner } | orderBy: ['order','tier', 'name']" ng-click="moveToVault(item, selectedOwner)" popover="{{ item.name }}" popover-trigger="mouseenter">
 							<img local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -280,13 +280,14 @@
 	<!-- build:js scripts/vendor.js -->
 	<!-- bower:js -->
 	<script src="bower_components/jquery/dist/jquery.js"></script>
-	<script src="bower_components/angularjs/angular.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 	<script src="bower_components/angular-cookies/angular-cookies.js"></script>
 	<!-- endbower -->
 	<!-- endbuild -->
 
-	<script type="text/javascript" src="bower_components/angular-filter/dist/angular-filter.js"></script>
+	<script type="text/javascript" src="bower_components/angular-filter/dist/angular-filter.js"></script>	
+	<script type="text/javascript" src="scripts/ui-bootstrap-tpls.min.js"></script>	
 	<script type="text/javascript" src="scripts/app.js"></script>
 	<script type="text/javascript" src="scripts/bungie.js"></script>
 	<script type="text/javascript" src="scripts/utils.js"></script>

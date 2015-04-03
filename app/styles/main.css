@@ -228,6 +228,11 @@ body {
 
 .activity-icon img {
 	width: 100%;	
+  opacity: .2;
+}
+
+.activity-icon img.completed {
+  opacity: 1;
 }
 
 .currencies {
@@ -255,4 +260,8 @@ body {
 
 .currency-icon.glimmer {
 	background-position: -88px 0px;	
+}
+
+.popover-title {
+  display: none;
 }

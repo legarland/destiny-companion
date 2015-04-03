@@ -84,7 +84,7 @@ angular.module('myApp').service('utils', function () {
       dataTo.push({
         owner: owner,
         hash: item.itemHash,
-        //type: itemType,
+        type: itemDef.type,
         //sort: itemSort,
         tier: itemDef.tier,
         name: itemDef.name,
