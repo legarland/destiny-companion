@@ -22,13 +22,23 @@ angular.module('displayFilters', []).filter('itemDisplay', function () {
         }
         
         // Group Misc
-        var miscIndex = ['Materials', 'Consumables'].indexOf(item.bucket);
+        var miscIndex = ['Materials', 'Consumables', 'Currency'].indexOf(item.bucket);
         if (miscIndex != -1) {
           item.order = miscIndex;
           item.displayBucket = "Misc"
         }
         
-        if (bucket == undefined || item.displayBucket == bucket)
+				var shouldAdd = true;
+				for (var i = 0; i < filtered.length; i++) {
+					var fItem = filtered[i];
+					if (fItem.hash == item.hash && fItem.owner == item.owner) {
+						fItem.amount += item.amount;	
+						shouldAdd = false;
+						break;
+					}
+				}
+				
+        if ((bucket == undefined  || item.displayBucket == bucket) && shouldAdd)
           filtered.push(item);
       }
     });

@@ -1,26 +1,6 @@
-angular.module('myApp', ['angular.filter', 'ngCookies', 'displayFilters'])
-  .directive('localImage', ['$parse', 'utils', function ($parse, utils) {
-    return {
-      restrict: 'A',
-      link: function (scope, element, attr) {
-
-        var img = $(element[0]);
-        chrome.storage.local.get(scope.item.icon, function (result) {
-          if (result[scope.item.icon] !== undefined) {
-            img.attr('src', 'data:image/png;base64,' + result[scope.item.icon])
-          } else {
-            img.on('load', function () {
-              var base64Img = utils.getBase64Image(img[0]);
-              var obj = {};
-              obj[scope.item.icon] = base64Img;
-              chrome.storage.local.set(obj);
-            });
-            img.attr('src', 'https://bungie.net' + scope.item.icon);
-          }
-        });
-      }
-    }
-    }]).controller('MainController', function ($scope, bungie, utils, $filter, $timeout, $q) {
+var myApp = angular.module('myApp', ['angular.filter', 'ngCookies', 'displayFilters'])
+  
+myApp.controller('MainController', function ($scope, bungie, utils, $filter, $timeout, $q) {
 
     //chrome.storage.local.clear();
 
@@ -30,26 +10,14 @@ angular.module('myApp', ['angular.filter', 'ngCookies', 'displayFilters'])
     $scope.inventory = [];
     $scope.utils = utils;
     $scope.selectedOwner = '';
+	
+		// Arrays used for order/grouping 
     $scope.armorGrouping = ['Helmet', 'Gauntlets', 'Chest Armor', 'Leg Armor', 'Class Armor', 'Subclass'];
     $scope.weaponGrouping = ['Primary Weapons', 'Special Weapons', 'Heavy Weapons'];
 
-    $scope.checkLocalStorage = function (key) {
-      var def = $q.defer();
-      chrome.storage.local.get(key, function (result) {
-        if (result[key] !== undefined) {
-          def.resolve(result[key]);
-        } else {
-          def.resolve('https://bungie.net' + key);
-        }
-      });
-
-      def.promise.then(function (data) {
-        return data;
-      });
-    }
-
-    var advisors = [];
+		var advisors = [];
     var nightfallHash;
+    
 
     // Used to handle the click event of the character card.
     $scope.selectOwner = function (id) {
@@ -60,12 +28,26 @@ angular.module('myApp', ['angular.filter', 'ngCookies', 'displayFilters'])
       }
     }
 
+		$scope.moveToVault = function(item, owner) {
+			bungie.transfer(owner, item.id, item.hash, 1, true, function (result, more) {
+				if (more.ErrorStatus == "Success")
+					loadInventory(owner);
+			});
+		}
+		
+		function reloadCharacter(owner) {
+			
+		}
+		
+		
+		// Checks whether or not the user has completed the nightfall
     function checkNightfallCompletion(characterId) {
       var char = findCharacterById(characterId);
 
       var nightfall = char.activities.activityAdvisors[nightfallHash].nightfall;
       var isComplete = nightfall.tiers[0].isCompleted;
       char.nightfall = isComplete;
+			
       $scope.$apply();
     }
 
@@ -82,6 +64,8 @@ angular.module('myApp', ['angular.filter', 'ngCookies', 'displayFilters'])
       $scope.user = u;
       $scope.$apply();
       loadUser();
+			
+			
     });
 
     // Loads the user from bungie which then triggers the loading of inventory, vault, etc.
@@ -127,6 +111,7 @@ angular.module('myApp', ['angular.filter', 'ngCookies', 'displayFilters'])
 
             loadInventory(id2);
             loadActivities(id2);
+						$scope.selectOwner($scope.characters[0].id);
           }
 
         });
@@ -144,9 +129,24 @@ angular.module('myApp', ['angular.filter', 'ngCookies', 'displayFilters'])
     }
 
     function loadInventory(c) {
+			
+			$scope.inventory = $filter('filter')($scope.inventory, {
+				owner: '!'+c
+			});
       bungie.inventory(c, function (i) {
         utils.appendItems(c, utils.flattenInventory(i.data), $scope.inventory);
-        $scope.tempinventory = $filter('itemDisplay')($scope.inventory);
+        $scope.inventory = $filter('itemDisplay')($scope.inventory);
+				
+				bungie.completeCharacter(c, function (data) {
+					console.log(data.data);
+					var currencies = data.data.inventory.currencies;
+					var user = findCharacterById(c);
+					user.glimmer = currencies[0].value;
+					user.vanguardMarks = currencies[2].value;
+					user.crucibleMarks = currencies[1].value;
+					$scope.$apply();
+				});
+				
         $scope.$apply();
       });
     }

@@ -186,6 +186,16 @@ angular.module('myApp').service('bungie', function () {
       complete: callback
     });
   }
+	this.completeCharacter = function (characterId, callback) {
+    _request({
+      route: '/Destiny/' + active.type +
+        '/Account/' + membershipId +
+        '/Character/' + characterId +
+        '/Complete/',
+      method: 'GET',
+      complete: callback
+    });
+  }
   this.getItem = function (characterId, itemId, callback) {
     _request({
       route: '/Destiny/' + active.type +
