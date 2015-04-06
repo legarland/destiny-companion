@@ -1,5 +1,26 @@
-<div style="padding: 20px">
-  <h4>{{ clickedItem.name }}</h4>  
-  <h6>{{ clickedItem.type }}</h6>
+<div class="modal-window clearfix">
+ 	<img class="modal-item-icon" ng-src="http://www.bungie.net{{ clickedItem.icon }}" />
+  <div class="modal-item-name">{{ clickedItem.name }}</div>  
+  <div class="modal-item-type">{{ clickedItem.type }}</div>	
+			
+	<div ng-repeat="node in fullItem.item.talentNodes">
+
+	</div>
+	
+	<div class="action-buttons">
+		<div class="action-button-container equip">
+			Equip 
+			<a ng-repeat="char in characters | equipFilter:activeChar:clickedItem" ng-click="equip(clickedItem, char)" popover="{{ char.class + ' (' + char.level + ')' }}" popover-trigger="mouseenter">
+				<img ng-src="http://bungie.net{{ char.icon }}" />
+			</a>
+		</div>
+		<div class="action-button-container store">
+			Store 
+			<a ng-repeat="char in characters | storeFilter:activeChar:clickedItem" popover="{{ char.class + ' (' + char.level + ')' }}" popover-trigger="mouseenter" ng-click="store(clickedItem, char)">
+				<img ng-src="http://bungie.net{{ char.icon }}" />
+			</a>
+		</div>
+		<button ng-if="clickedItem.owner != 'vault'" ng-click="moveToVault(clickedItem)" class="btn btn-primary">Move to Vault</button>
+	</div>
 </div>
 

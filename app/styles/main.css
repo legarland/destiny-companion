@@ -3,6 +3,8 @@ body {
   padding: 20px;
 }
 
+a { cursor: pointer }
+
 .title {
 	font-size: 14px;
 	font-weight: bold;
@@ -264,4 +266,50 @@ body {
 
 .popover-title {
   display: none;
+}
+
+/** Modal Stlyes **/
+.modal-window {
+	padding: 20px;	
+}
+
+.modal-item-icon {
+	float: left; margin-right: 15px; width: 75px;	
+}
+
+.modal-item-name {
+	font-size: 20px;	
+}
+
+.modal-item-type {
+	font-size: 16px;
+}
+
+.action-buttons {
+	margin-top: 10px;
+	text-align: center;
+}
+
+.action-button-container {
+	padding: 5px; 
+	border: solid 1px #b7b7b7;	
+	display: inline-block;
+	margin-right: 15px;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.action-button-conatiner.equip {
+	border-color: forestgreen;
+	color: forestgreen;
+}
+
+.action-button-conatiner.store {
+	border-color: darkred;
+	color: darkred;
+}
+
+.action-button-container img {
+	height: 35px;
+	margin-left: 5px;
 }

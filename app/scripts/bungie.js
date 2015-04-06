@@ -201,7 +201,7 @@ angular.module('myApp').service('bungie', function () {
       route: '/Destiny/' + active.type +
         '/Account/' + membershipId +
         '/Character/' + characterId +
-        '/Inventory/' + itemId,
+        '/Inventory/' + itemId + '/?definitions=true',
       method: 'GET',
       complete: callback
     });
