@@ -1,4 +1,4 @@
-angular.module('myApp').service('utils', function ($filter) {
+angular.module('myApp').service('utils', function ($filter, toastr) {
 
 	this.flattenVault = function (data) {
 		var inv = [];
@@ -150,6 +150,16 @@ angular.module('myApp').service('utils', function ($filter) {
 		var dataURL = canvas.toDataURL("image/png");
 
 		return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+	}
+	
+	this.error = function(response) {
+		console.log(response);
+		toastr.error(response.Message);
+	}
+	
+	this.success = function(response, message) {
+		console.log(response);
+		toastr.success(message);
 	}
 	
   // Find a replacement item to equip.

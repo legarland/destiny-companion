@@ -24,7 +24,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
         {
           loadInventory(item.owner);
           loadInventory('vault');
-          toastr.success('Item successfully moved to vault.');
+          util.success(more, 'Item successfully moved to vault.');
         }
         
         $modalInstance.close(null);
@@ -62,7 +62,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
             item.equipped = false;
             callback();
           } else {
-            toastr.erorr(more)
+            utils.erorr(more);
           }
         });
       }
@@ -83,8 +83,12 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
       // Equip the item
       bungie.equip(char.id, item.id, function (e, more) {
         if (more.ErrorCode == 1) {
+					toastr.success("Item successfully equipped");
           loadInventory(char.id);
         }
+				else {
+					utils.error(more);	
+				}
       });
     }
     // All done, just reload
@@ -112,7 +116,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
                   if (more.ErrorCode == 1) {
                     toastr.success('Item successfully equipped');
                   } else {
-                    toastr.error(more.Message);
+                    utils.error(more);
                   }
                   loadInventory(item.owner);
                   loadInventory(char.id);
@@ -123,12 +127,12 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
                 loadInventory(char.id);
               }
             } else {
-              toastr.error(more.Message);
+              utils.error(more);
             }
           });
 
         } else {
-          toastr.error(more.Message);
+          utils.error(more);
         }
 
       });
@@ -140,8 +144,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
           loadInventory(item.owner);
           loadInventory(char.id);
         } else {
-          console.log(more);
-          toastr.error(more.Message)
+          utils.error(more)
         }
       });
     } else {

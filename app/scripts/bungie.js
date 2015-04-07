@@ -217,7 +217,7 @@ angular.module('myApp').service('bungie', function () {
         transferToVault: toVault
       };
     
-    console.log(pay);
+    //console.log(pay);
     
     _request({
       route: '/Destiny/TransferItem/',
