@@ -152,9 +152,10 @@ angular.module('myApp').service('utils', function ($filter) {
 		return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 	}
 	
+  // Find a replacement item to equip.
 	this.getReplacementItem = function (inventory, item) {
 		
-		var isExotic = item.tier == "Exotic";
+		var isExotic = (item.tier == "Exotic");
 		
 		var arr = [];
 		if (isExotic)
