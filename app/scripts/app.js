@@ -15,9 +15,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
     });
   }
 
-  //getItem($scope.clickedItem);
-
-  // Moves an item to the vault
+	// Moves an item to the vault
   $scope.moveToVault = function (item, amount) {
       bungie.transfer(item.owner, item.id, item.hash, amount, true, function (result, more) {
         if (more.ErrorStatus == "Success")
@@ -56,13 +54,13 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
         // TODO: Let user know.	
         console.log("Didn't find anything to equip");
       } else {
+				
         // Run the store command and then equip command.
-        console.log("Equipping new item " + replacementItem.name);
         bungie.equip(item.owner, replacementItem.id, function (e, more) {
-          console.log(more);
           if (more.ErrorCode == 1) {
             toastr.success('Item equipped/dequipped successfully.')
             item.equipped = false;
+						loadInventory(item.owner);
             callback();
           } else {
             utils.erorr(more);
@@ -81,11 +79,11 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
     // If the item is equipped then we need to dequip it before doing anything.
     if (item.equipped) {
       dequip(item, char, function () {
-        moveItem(item, char, isStore);
+				item.equipped = false;
+        moveItem(item, char, amount, isStore);
       });
       return;
     }
-
     // If the item as reached its destination.
     if (item.owner == char.id) {
 
