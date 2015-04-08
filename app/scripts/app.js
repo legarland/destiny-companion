@@ -24,7 +24,10 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
         {
           loadInventory(item.owner);
           loadInventory('vault');
-          util.success(more, 'Item successfully moved to vault.');
+          utils.success(more, 'Item successfully moved to vault.');
+        }
+        else {
+          utils.error(more, "Vault is full. At least 1 free vault space is needed to transfer items between characters.");
         }
         
         $modalInstance.close(null);
@@ -69,7 +72,13 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
     }
   }
 
-  var moveItem = function (item, char, isStore) {
+  var moveItem = function (item, char, amount, isStore) {
+    
+    // If we didn't pass an amount then just use 1
+    if (!amount.length)
+      amount = 1;
+    
+    // If the item is equipped then we need to dequip it before doing anything.
     if (item.equipped) {
       dequip(item, char, function () {
         moveItem(item, char, isStore);
@@ -77,36 +86,40 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
       return;
     }
 
+    // If the item as reached its destination.
+    if (item.owner == char.id) {
 
-    if (item.owner == char.id && !isStore) {
-
-      // Equip the item
-      bungie.equip(char.id, item.id, function (e, more) {
-        if (more.ErrorCode == 1) {
-					toastr.success("Item successfully equipped");
+      // If we still need to equip this item then equip it.
+      if (!isStore)
+      {
+        // Equip the item
+        bungie.equip(char.id, item.id, function (e, more) {
+          if (more.ErrorCode == 1) {
+            toastr.success("Item successfully equipped");
+          }
+				  else {
+            utils.error(more);	
+				  }
+          
           loadInventory(char.id);
-        }
-				else {
-					utils.error(more);	
-				}
-      });
-    }
-    // All done, just reload
-    else if (item.owner == char.id && isStore) {
-      loadInventory(char.id);
+        });
+      }
+      // Item has reached its destination. Go ahead and reload inventory.
+      else {
+        loadInventory(char.id);
+      }
     }
     // Need to move item to new character
     else if (item.owner != char.id && item.owner != 'vault') {
 
       // transfer to vault first.
-      bungie.transfer(item.owner, item.id, item.hash, 1, true, function (e, more) {
+      bungie.transfer(item.owner, item.id, item.hash, amount, true, function (e, more) {
 
         console.log(more);
         if (more.ErrorCode == 1) {
-          //toastr.success('Success!', 'Item successfully transferred.')
 
           // Now movie item from vault to new char
-          bungie.transfer('vault', item.id, item.hash, 1, true, function (e, more) {
+          bungie.transfer(char.id, item.id, item.hash, amount, false, function (e, more) {
 
             if (more.ErrorCode == 1) {
 
@@ -138,7 +151,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
       });
 
     } else if (item.owner == 'vault') {
-      bungie.transfer(char.id, item.id, item.hash, 1, false, function (e, more) {
+      bungie.transfer(char.id, item.id, item.hash, amount, false, function (e, more) {
         if (more.ErrorCode == 1) {
           toastr.success('Item successfully transferred.');
           loadInventory(item.owner);
@@ -245,7 +258,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
     var isComplete = nightfall.tiers[0].isCompleted;
     char.nightfall = isComplete;
 
-    $scope.$apply();
+    //$scope.$apply();
   }
 
   // Load initial user
@@ -259,7 +272,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
     }
 
     $scope.user = u;
-    $scope.$apply();
+    //$scope.$apply();
     loadUser();
 
 

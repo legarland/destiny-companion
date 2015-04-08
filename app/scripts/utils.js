@@ -152,9 +152,13 @@ angular.module('myApp').service('utils', function ($filter, toastr) {
 		return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 	}
 	
-	this.error = function(response) {
+	this.error = function(response, optionalMessage) {
 		console.log(response);
-		toastr.error(response.Message);
+    
+    if (optionalMessage != null)
+      toastr.error(optionalMessage);
+    else
+		  toastr.error(response.Message);
 	}
 	
 	this.success = function(response, message) {

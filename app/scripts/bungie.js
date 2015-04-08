@@ -208,15 +208,6 @@ angular.module('myApp').service('bungie', function () {
   }
   this.transfer = function (characterId, itemId, itemHash, amount, toVault, callback) {
     
-    var pay = {
-        characterId: characterId,
-        membershipType: active.type,
-        itemId: itemId,
-        itemReferenceHash: itemHash,
-        stackSize: amount,
-        transferToVault: toVault
-      };
-    
     //console.log(pay);
     
     _request({
