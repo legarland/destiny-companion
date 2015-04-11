@@ -19,4 +19,24 @@ myApp.directive('localImage', ['$parse', 'utils', function ($parse, utils) {
 			});
 		}
 	}
-}]);
+}]).directive('loader', [ function () {
+  return {
+    restrict: 'A',
+    scope: { },
+    link: function (scope, element, attr) {
+      var loaderMarkup = $('<div class="spinner-bg"><div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div></div>');
+      
+      scope.$parent.$watch('item.loading', function () {
+
+        
+        if (scope.$parent.item.loading) {
+          element.append(loaderMarkup);
+        }
+        else {
+          element.find('.loader').remove();
+        }
+      });
+      
+    }
+  }
+}]);;

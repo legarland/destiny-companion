@@ -31,7 +31,7 @@ angular.module('displayFilters', []).filter('itemDisplay', function () {
 				var shouldAdd = true;
 				for (var i = 0; i < filtered.length; i++) {
 					var fItem = filtered[i];
-					if (fItem.hash == item.hash && fItem.owner == item.owner) {
+					if (fItem.hash == item.hash && fItem.owner == item.owner && ['Weapons', 'Armor'].indexOf(item.displayBucket) == -1) {
 						fItem.amount += item.amount;
 						shouldAdd = false;
 						break;

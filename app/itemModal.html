@@ -10,13 +10,13 @@
 	<div class="action-buttons">
 		<div class="action-button-container equip">
 			Equip 
-			<a ng-repeat="char in characters | equipFilter:activeChar:clickedItem" ng-click="equip(clickedItem, char)" popover="{{ char.class + ' (' + char.level + ')' }}" popover-trigger="mouseenter">
+			<a ng-repeat="char in characters | equipFilter:activeChar:clickedItem" ng-click="equip(clickedItem, char, 1)" popover="{{ char.class + ' (' + char.level + ')' }}" popover-trigger="mouseenter">
 				<img ng-src="http://bungie.net{{ char.icon }}" />
 			</a>
 		</div>
 		<div class="action-button-container store">
 			Store 
-			<a ng-repeat="char in characters | storeFilter:activeChar:clickedItem" popover="{{ char.class + ' (' + char.level + ')' }}" popover-trigger="mouseenter" ng-click="store(clickedItem, char)">
+			<a ng-repeat="char in characters | storeFilter:activeChar:clickedItem" popover="{{ char.class + ' (' + char.level + ')' }}" popover-trigger="mouseenter" ng-click="store(clickedItem, char, 1)">
 				<img ng-src="http://bungie.net{{ char.icon }}" />
 			</a>
 		</div>

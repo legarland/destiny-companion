@@ -162,7 +162,7 @@ angular.module('myApp').service('bungie', function () {
 	}
 	this.advisors = function (callback) {
 		_request({
-      route: '/Destiny/Advisors/',
+      route: '/Destiny/Advisors/?definitions=true',
       method: 'GET',
       complete: callback
     });
