@@ -28,6 +28,8 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
               loadInventory('vault');
               utils.success(more, 'Item successfully moved to vault.');
             } else {
+              
+              // Not necessarily vault is full. Need to investigate
               utils.error(more, "Vault is full. At least 1 free vault space is needed to transfer items between characters.");
             }
 
@@ -197,13 +199,82 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 myApp.controller('MainController', function ($scope, bungie, utils, $filter, $timeout, $modal) {
 
   //chrome.storage.local.clear();
-
+  
   $scope.user = {};
   $scope.vault = 'loading';
   $scope.characters = [];
   $scope.inventory = [];
   $scope.utils = utils;
   $scope.selectedOwner = '';
+  $scope.showCurrencies = true;
+  
+  $scope.toggleCurrencies = function () {
+    $scope.showCurrencies = !$scope.showCurrencies;
+  }
+  
+  $scope.currencies = [
+    {
+      name: "Strange Coins",
+      hash: "1738186005",
+      icon: "/common/destiny_content/icons/7cf72926fa2e5a118291fafbbe16b503.jpg",
+      amount: 0
+    },
+    {
+      name: "Motes of Light",
+      hash: "937555249",
+      icon: "/common/destiny_content/icons/2e026fc67d445e5b2630277aa794b4b1.jpg",
+      amount: 0
+    },
+    {
+      name: "Ascendant Shards",
+      hash: "258181985",
+      icon: "/common/destiny_content/icons/76ff3a1b1084b197784deec29eef45d1.jpg",
+      amount: 0
+    },
+    {
+      name: "Ascendant Energy",
+      hash: "1893498008",
+      icon: "/common/destiny_content/icons/f553cc54982b2fa666400d6880b72bfd.jpg",
+      amount: 0
+    },
+    {
+      name: "Radiant Shards",
+      hash: "769865458",
+      icon: "/common/destiny_content/icons/d656abfbeb17f82f85aa4c080d175b3d.jpg",
+      amount: 0
+    },
+    {
+      name: "Radiant Energy",
+      hash: "616706469",
+      icon: "/common/destiny_content/icons/eecdc248349253b60c76bd99136b6a65.jpg",
+      amount: 0
+    },
+    {
+      name: "Relic Iron",
+      hash: "3242866270",
+      icon: "/common/destiny_content/icons/af93e2c3bf2300707278140c901120aa.jpg",
+      amount: 0
+    },
+    {
+      name: "Spirit Bloom",
+      hash: "2254123540",
+      icon: "/common/destiny_content/icons/c189c4e4e41a6ffd998a532be7f724e1.jpg",
+      amount: 0
+    },
+    {
+      name: "Helium Filaments",
+      hash: "1797491610",
+      icon: "/common/destiny_content/icons/f5f546ab24a9a66ab80c9f3e692ad18e.jpg",
+      amount: 0
+    },
+    {
+      name: "Spinmetal",
+      hash: "2882093969",
+      icon: "/common/destiny_content/icons/c3a0d1d01636fd746542fdac60e1d2a4.jpg",
+      amount: 0
+    }
+  ];
+  
   $scope.weeklyHashes = {
     nightfall: '',
     heroic: [],
@@ -293,10 +364,6 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
     });
   }
 
-  function reloadCharacter(owner) {
-
-  }
-
   function loadWeeklyHashes() {
     bungie.advisors(function (response) {
       var data = response.data;
@@ -305,6 +372,21 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 
       updateWeeklies();
     })
+  }
+  
+  function totalCurrencies() {
+    angular.forEach($scope.currencies, function (value, key) {
+      value;
+      var amount = 0;
+      angular.forEach($scope.inventory, function (value2, key2) {
+        if (value2.hash == value.hash) {
+          amount += value2.amount;
+        }
+      });
+      value.amount = amount;
+    });
+    
+    //$scope.$apply();
   }
 
   function updateWeeklies() {
@@ -458,6 +540,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 
       if (count != null && count == characterCount - 1) {
         loadWeeklyHashes();
+        totalCurrencies();
       }
 
       $scope.$apply();

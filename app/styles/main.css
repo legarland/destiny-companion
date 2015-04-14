@@ -221,10 +221,11 @@ a, [ng-click] { cursor: pointer }
 }
 
 .bucket-title {
-  background-color: darkgrey;
-  padding: 3px 5px;
+  border-bottom: solid 3px #555;
   font-size: 20px;
   margin-bottom: 5px;
+  padding-bottom: 3px;
+  color: #fff;
 }
 
 .bucket-subtitle {
@@ -331,6 +332,28 @@ a, [ng-click] { cursor: pointer }
 .action-button-container img {
 	height: 35px;
 	margin-left: 5px;
+}
+
+div.currency-container {
+  margin-bottom: 15px;
+  padding: 5px;
+  padding-bottom: 0px;
+  background-color: darkgray;
+  position: relative;
+}
+
+.currency-container .minimize{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-weight: bold;
+}
+
+.currencies-title {
+  font-weight: bold;
+  margin-right: 10px;
+  text-align: center;
+  padding-top: 5px;
 }
 
 .loader {
