@@ -330,16 +330,17 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
     var vault26steps = vault.raidActivities.tiers[0].stepsComplete;
     var vault30steps = vault.raidActivities.tiers[1].stepsComplete;
 
-    $scope.weeklyStatus.nightfall = nightfall30;
-    $scope.weeklyStatus.heroic = {
+		char.weeklyStatus = $scope.weeklyStatus;
+    char.weeklyStatus.nightfall = nightfall30;
+    char.weeklyStatus.heroic = {
       level24: heroic24,
       level28: heroic28,
       level30: heroic30
     }
-    $scope.weeklyStatus.crota.level30.steps = crota30steps;
-    $scope.weeklyStatus.crota.level33.steps = crota33steps;
-    $scope.weeklyStatus.vault.level26.steps = vault26steps;
-    $scope.weeklyStatus.vault.level30.steps = vault30steps;
+    char.weeklyStatus.crota.level30.steps = crota30steps;
+    char.weeklyStatus.crota.level33.steps = crota33steps;
+    char.weeklyStatus.vault.level26.steps = vault26steps;
+    char.weeklyStatus.vault.level30.steps = vault30steps;
 
     $scope.$apply();
   }
