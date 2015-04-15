@@ -1,13 +1,27 @@
-var myApp = angular.module('myApp', ['angular.filter', 'ngCookies', 'displayFilters', 'ui.bootstrap', 'toastr'])
+var myApp = angular.module('myApp', ['angular.filter', 'ngCookies', 'displayFilters', 'ui.bootstrap', 'toastr', 'ui-rangeSlider'])
 
-myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, characters, activeChar, inventory, utils, loadInventory, $filter, $log, $q, toastr) {
+myApp.controller('SliderCtrl', function ($scope, $modalInstance, item) {
+  $scope.minAmount = 1;
+  $scope.maxAmount = item.amount;
+  $scope.selectedMax = $scope.maxAmount;
 
-  $log.info(item);
+  $scope.ok = function () {
+    $modalInstance.close($scope.selectedMax);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+});
+
+myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, characters, activeChar, inventory, utils, loadInventory, $filter, $log, $q, toastr, $modal) {
+
   $scope.clickedItem = item;
   $scope.characters = characters;
   $scope.activeChar = activeChar;
   $scope.inventory = inventory;
   $scope.fullItem = 'loading...';
+
 
   var getItem = function (item) {
     bungie.getItem(item.owner, item.id, function (result) {
@@ -17,50 +31,102 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 
   // Moves an item to the vault
   $scope.moveToVault = function (item, amount) {
-      item.loading = true;
-      if (item.equipped) {
-        dequip(item, function () {
-          item.equipped = false;
 
-          bungie.transfer(item.owner, item.id, item.hash, amount, true, function (result, more) {
+      var doMove = function (amt) {
+        item.loading = true;
+        if (item.equipped) {
+          dequip(item, function () {
+            item.equipped = false;
+
+            bungie.transfer(item.owner, item.id, item.hash, amt, true, function (result, more) {
+              if (more.ErrorStatus == "Success") {
+                loadInventory(item.owner);
+                loadInventory('vault');
+                utils.success(more, 'Item successfully moved to vault.');
+              } else {
+
+                // Not necessarily vault is full. Need to investigate
+                utils.error(more, "Vault is full. At least 1 free vault space is needed to transfer items between characters.");
+              }
+
+              $modalInstance.close(null);
+            });
+
+          });
+          return;
+        } else {
+          bungie.transfer(item.owner, item.id, item.hash, amt, true, function (result, more) {
             if (more.ErrorStatus == "Success") {
               loadInventory(item.owner);
               loadInventory('vault');
               utils.success(more, 'Item successfully moved to vault.');
             } else {
-              
-              // Not necessarily vault is full. Need to investigate
               utils.error(more, "Vault is full. At least 1 free vault space is needed to transfer items between characters.");
             }
 
             $modalInstance.close(null);
           });
-
-        });
-        return;
-      } else {
-        bungie.transfer(item.owner, item.id, item.hash, amount, true, function (result, more) {
-          if (more.ErrorStatus == "Success") {
-            loadInventory(item.owner);
-            loadInventory('vault');
-            utils.success(more, 'Item successfully moved to vault.');
-          } else {
-            utils.error(more, "Vault is full. At least 1 free vault space is needed to transfer items between characters.");
-          }
-
-          $modalInstance.close(null);
-        });
+        }
       }
+
+      if (item.amount > 1) {
+
+        var modalInstance = $modal.open({
+          templateUrl: 'slider.html',
+          controller: 'SliderCtrl',
+          backdrop: 'static',
+          size: 'md',
+          resolve: {
+            item: function () {
+              return item;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (maxAmount) {
+          doMove(maxAmount);
+        }, function () {
+
+        });
+
+      } else {
+        doMove(amount);
+      }
+
+
     }
     // Equips an item.
   $scope.equip = function (item, char, amount) {
     item.loading = true;
-    moveItem(item, char, amount, false);
+    moveItem(item, char, amount, false);  
   }
 
   $scope.store = function (item, char, amount) {
-    item.loading = true;
-    moveItem(item, char, amount, true);
+        item.loading = true;
+    if (item.amount > 1) {
+
+        var modalInstance = $modal.open({
+          templateUrl: 'slider.html',
+          controller: 'SliderCtrl',
+          backdrop: 'static',
+          size: 'md',
+          resolve: {
+            item: function () {
+              return item;
+            }
+          }
+        });
+      
+       modalInstance.result.then(function (maxAmount) {
+          moveItem(item, char, maxAmount, true);  
+        }, function () {
+
+        });
+    }
+    else {
+      moveItem(item, char, amount, true);  
+    }
+    
   }
 
   // Stores an item.
@@ -76,6 +142,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
       if (replacementItem === undefined) {
         // TODO: Let user know.	
         toastr.error(null, "Couldn't find another item to equip.");
+        item.loading = false;
       } else {
 
         // Run the store command and then equip command.
@@ -87,6 +154,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
             callback();
           } else {
             utils.erorr(more);
+            item.loading = false;
           }
         });
       }
@@ -118,6 +186,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
             toastr.success("Item successfully equipped");
           } else {
             utils.error(more);
+            item.loading = false;
           }
 
           loadInventory(char.id);
@@ -149,6 +218,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
                     toastr.success('Item successfully equipped');
                   } else {
                     utils.error(more);
+                    item.loading = false;
                   }
                   loadInventory(item.owner);
                   loadInventory(char.id);
@@ -160,11 +230,13 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
               }
             } else {
               utils.error(more);
+              item.loading = false;
             }
           });
 
         } else {
           utils.error(more);
+          item.loading = false;
         }
 
       });
@@ -199,7 +271,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 myApp.controller('MainController', function ($scope, bungie, utils, $filter, $timeout, $modal) {
 
   //chrome.storage.local.clear();
-  
+
   $scope.user = {};
   $scope.vault = 'loading';
   $scope.characters = [];
@@ -207,11 +279,11 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
   $scope.utils = utils;
   $scope.selectedOwner = '';
   $scope.showCurrencies = true;
-  
+
   $scope.toggleCurrencies = function () {
     $scope.showCurrencies = !$scope.showCurrencies;
   }
-  
+
   $scope.currencies = [
     {
       name: "Strange Coins",
@@ -274,7 +346,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
       amount: 0
     }
   ];
-  
+
   $scope.weeklyHashes = {
     nightfall: '',
     heroic: [],
@@ -373,7 +445,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
       updateWeeklies();
     })
   }
-  
+
   function totalCurrencies() {
     angular.forEach($scope.currencies, function (value, key) {
       value;
@@ -385,7 +457,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
       });
       value.amount = amount;
     });
-    
+
     //$scope.$apply();
   }
 
@@ -412,7 +484,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
     var vault26steps = vault.raidActivities.tiers[0].stepsComplete;
     var vault30steps = vault.raidActivities.tiers[1].stepsComplete;
 
-		char.weeklyStatus = $scope.weeklyStatus;
+    char.weeklyStatus = $scope.weeklyStatus;
     char.weeklyStatus.nightfall = nightfall30;
     char.weeklyStatus.heroic = {
       level24: heroic24,
@@ -535,7 +607,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
         user.glimmer = currencies[0].value;
         user.vanguardMarks = currencies[2].value;
         user.crucibleMarks = currencies[1].value;
-        $scope.$apply();
+        //$scope.$apply();
       });
 
       if (count != null && count == characterCount - 1) {
@@ -543,7 +615,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
         totalCurrencies();
       }
 
-      $scope.$apply();
+      
     });
   }
 

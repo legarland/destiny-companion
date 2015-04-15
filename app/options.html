@@ -6,6 +6,7 @@
   <!-- bower:css -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
+  <link rel="stylesheet" href="bower_components/angular-rangeslider/angular.rangeSlider.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css styles/main.css -->
@@ -81,7 +82,7 @@
                   <div class="weekly-info">
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_featured.png" ng-class="{'completed': weeklyStatus.heroic.level24}">
+                        <img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_featured.png" ng-class="{'completed': item.weeklyStatus.heroic.level24}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -94,7 +95,7 @@
 
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_featured.png">
+                        <img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_featured.png" ng-class="{'completed': item.weeklyStatus.heroic.level28 > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -107,7 +108,7 @@
 
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_featured.png">
+                        <img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_featured.png" ng-class="{'completed': item.weeklyStatus.heroic.level30 > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -120,7 +121,7 @@
 
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_nightfall.png">
+                        <img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_nightfall.png" ng-class="{'completed': item.weeklyStatus.nightfall > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -136,7 +137,7 @@
                   <div class="weekly-info">
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="https://www.bungie.net/common/destiny_content/icons/645870182cf1ace389050157fe4a08fa.png">
+                        <img src="http://www.bungie.net/common/destiny_content/icons/72c3867ee54486b87ea325370e3dbb20.png" ng-class="{'completed': item.weeklyStatus.vault.level26.steps > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -149,7 +150,7 @@
 
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="https://www.bungie.net/common/destiny_content/icons/645870182cf1ace389050157fe4a08fa.png">
+                        <img src="http://www.bungie.net/common/destiny_content/icons/72c3867ee54486b87ea325370e3dbb20.png" ng-class="{'completed': item.weeklyStatus.vault.level30.steps > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -162,7 +163,7 @@
 
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="https://www.bungie.net/common/destiny_content/icons/645870182cf1ace389050157fe4a08fa.png">
+                        <img src="http://www.bungie.net/common/destiny_content/icons/72c3867ee54486b87ea325370e3dbb20.png" ng-class="{'completed': item.weeklyStatus.crota.level30.steps > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -175,7 +176,7 @@
 
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="https://www.bungie.net/common/destiny_content/icons/645870182cf1ace389050157fe4a08fa.png" ng-class="{'completed': item.weeklyStatus.crota.level33.steps > 0}" title="{{ item.weeklyStatus }}">
+                        <img src="http://www.bungie.net/common/destiny_content/icons/72c3867ee54486b87ea325370e3dbb20.png" ng-class="{'completed': item.weeklyStatus.crota.level33.steps > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -299,6 +300,7 @@
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
   <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+  <script src="bower_components/angular-rangeslider/angular.rangeSlider.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -307,7 +309,7 @@
   <script type="text/javascript" src="scripts/app.js"></script>
   <script type="text/javascript" src="scripts/bungie.js"></script>
   <script type="text/javascript" src="scripts/utils.js"></script>
-  <script type="text/javascript" src="scripts/itemdef.json"></script>
+  <script type="text/javascript" src="scripts/itemdef2.json"></script>
   <script type="text/javascript" src="scripts/collection.json"></script>
   <script type="text/javascript" src="scripts/statdef.json"></script>
   <script type="text/javascript" src="scripts/filters.js"></script>

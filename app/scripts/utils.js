@@ -71,11 +71,19 @@ angular.module('myApp').service('utils', function ($filter, toastr) {
 			return 'Miscellaneous';
 	}
 
+  function findItem(hash) {
+    for (var i = 0; i < _itemDefs2.length; i++) {
+      var def = _itemDefs2[i];
+      if (def.itemHash == hash) 
+        return def;
+    }
+  }
+  
 	this.appendItems = function (owner, dataFrom, dataTo) {
 
 		for (var o in dataFrom) {
 			var item = dataFrom[o];
-			var itemDef = _itemDefs[item.itemHash];
+			var itemDef = _itemDefs2[item.itemHash];
 
 			if (itemDef === undefined) {
 				continue;
