@@ -7,15 +7,12 @@
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
   <link rel="stylesheet" href="bower_components/angular-rangeslider/angular.rangeSlider.css" />
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css styles/main.css -->
   <link href="styles/main.css" rel="stylesheet">
   <!-- endbuild -->
-
-
-
-
 
 </head>
 
@@ -26,7 +23,8 @@
       <div class="col-xs-12">
         <div class="currency-container clearfix">
           <div class="pull-left currencies-title">
-            Currency<br/>Totals
+            Currency
+            <br/>Totals
           </div>
           <div ng-repeat="item in currencies" class="item">
             <img local-image class="item-icon" ng-src="https://bungie.net{{ item.icon }}" class="img-responsive" />
@@ -137,7 +135,7 @@
                   <div class="weekly-info">
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="http://www.bungie.net/common/destiny_content/icons/72c3867ee54486b87ea325370e3dbb20.png" ng-class="{'completed': item.weeklyStatus.vault.level26.steps > 0}" title="{{ item.weeklyStatus }}">
+                        <img src="https://www.bungie.net/common/destiny_content/icons/7b25eb30fc5e93493eada0c15871192a.png" ng-class="{'completed': item.weeklyStatus.vault.level26.steps > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -150,7 +148,7 @@
 
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="http://www.bungie.net/common/destiny_content/icons/72c3867ee54486b87ea325370e3dbb20.png" ng-class="{'completed': item.weeklyStatus.vault.level30.steps > 0}" title="{{ item.weeklyStatus }}">
+                        <img src="https://www.bungie.net/common/destiny_content/icons/7b25eb30fc5e93493eada0c15871192a.png" ng-class="{'completed': item.weeklyStatus.vault.level30.steps > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -163,7 +161,7 @@
 
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="http://www.bungie.net/common/destiny_content/icons/72c3867ee54486b87ea325370e3dbb20.png" ng-class="{'completed': item.weeklyStatus.crota.level30.steps > 0}" title="{{ item.weeklyStatus }}">
+                        <img src="https://www.bungie.net/common/destiny_content/icons/7b25eb30fc5e93493eada0c15871192a.png" ng-class="{'completed': item.weeklyStatus.crota.level30.steps > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -176,7 +174,7 @@
 
                     <div class="weekly-activity">
                       <div class="activity-icon">
-                        <img src="http://www.bungie.net/common/destiny_content/icons/72c3867ee54486b87ea325370e3dbb20.png" ng-class="{'completed': item.weeklyStatus.crota.level33.steps > 0}" title="{{ item.weeklyStatus }}">
+                        <img src="https://www.bungie.net/common/destiny_content/icons/7b25eb30fc5e93493eada0c15871192a.png" ng-class="{'completed': item.weeklyStatus.crota.level33.steps > 0}" title="{{ item.weeklyStatus }}">
                       </div>
                       <div class="activity-details">
                         <div class="activity-name">
@@ -292,6 +290,29 @@
     </div>
   </div>
 
+  <div id="bottomTabs" tab-panel>
+    <div id="tabHandles">
+      <div class="tab-handle" id="tab1Handle" tabname="favoritesTab">Favorites</div>
+      <div class="tab-handle" id="tab2Handle" tabname="loadoutsTab">Loadouts</div>
+    </div>
+    <div id="tabContainer">
+      <div id="favoritesTab" class="bottom-tab">
+        <div data-drop="true" data-jqyoui-options ng-model="favorites" jqyoui-droppable style="height: 50px">
+          <div class="item ng-class:{ 'full': item.complete }" ng-repeat="item in inventory | filter: { favorite: true } | orderBy: ['order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader>
+            <img class="item-icon" local-image />
+            <div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
+            <span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
+            <span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
+                  <img ng-if="item.damageType == 2" src="images/arc.png" />
+                  <img ng-if="item.damageType == 3" src="images/solar.png" />
+                  <img ng-if="item.damageType == 4" src="images/void.png" />
+                </span>
+          </div>
+        </div>
+      </div>
+      <div id="loadoutsTab" class="bottom-tab">Loadouts</div>
+    </div>
+  </div>
 
   <!-- build:js scripts/vendor.js -->
   <!-- bower:js -->
@@ -304,6 +325,7 @@
   <!-- endbower -->
   <!-- endbuild -->
 
+  <script type="text/javascript" src="scripts/ui.js"></script>
   <script type="text/javascript" src="bower_components/angular-filter/dist/angular-filter.js"></script>
   <script type="text/javascript" src="scripts/ui-bootstrap-tpls.min.js"></script>
   <script type="text/javascript" src="scripts/app.js"></script>

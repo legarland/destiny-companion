@@ -1,7 +1,11 @@
 <div class="modal-window clearfix">
+  <div class="modal-item-fav">
+    <a ng-click="setFavorite()" favorite><i class="fa fa-star fa-2x ng-class:{'isFavorite':clickedItem.favorite}"/></a>
+  </div>	
  	<img class="modal-item-icon" ng-src="http://www.bungie.net{{ clickedItem.icon }}" />
   <div class="modal-item-name">{{ clickedItem.name }}</div>  
-  <div class="modal-item-type">{{ clickedItem.type }}</div>	
+  <div class="modal-item-type">{{ clickedItem.type }}</div>
+  
 			
 	<div ng-repeat="node in fullItem.item.talentNodes">
 

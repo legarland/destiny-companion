@@ -29,6 +29,29 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
     });
   }
 
+  $scope.setFavorite = function () {
+    $scope.clickedItem.favorite = !$scope.clickedItem.favorite;
+    var favItem = {
+      hash: $scope.clickedItem.hash,
+      id: $scope.clickedItem.id
+    };
+    var favs = localStorage['favs'];
+    if (favs == null)
+      favs = [];
+
+    if (!$scope.clickedItem.favorite) {
+      for (var i = 0; i < favs.length; i++) {
+        var f = favs[i];
+        if (f.hash == favItem.hash && f.id == favItem.id) {
+          favs.pop(f);
+        }
+      }
+    }
+    else {
+      favs.push(favItem);
+    }
+  }
+
   // Moves an item to the vault
   $scope.moveToVault = function (item, amount) {
 
@@ -98,35 +121,34 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
     // Equips an item.
   $scope.equip = function (item, char, amount) {
     item.loading = true;
-    moveItem(item, char, amount, false);  
+    moveItem(item, char, amount, false);
   }
 
   $scope.store = function (item, char, amount) {
-        item.loading = true;
+    item.loading = true;
     if (item.amount > 1) {
 
-        var modalInstance = $modal.open({
-          templateUrl: 'slider.html',
-          controller: 'SliderCtrl',
-          backdrop: 'static',
-          size: 'md',
-          resolve: {
-            item: function () {
-              return item;
-            }
+      var modalInstance = $modal.open({
+        templateUrl: 'slider.html',
+        controller: 'SliderCtrl',
+        backdrop: 'static',
+        size: 'md',
+        resolve: {
+          item: function () {
+            return item;
           }
-        });
-      
-       modalInstance.result.then(function (maxAmount) {
-          moveItem(item, char, maxAmount, true);  
-        }, function () {
+        }
+      });
 
-        });
+      modalInstance.result.then(function (maxAmount) {
+        moveItem(item, char, maxAmount, true);
+      }, function () {
+
+      });
+    } else {
+      moveItem(item, char, amount, true);
     }
-    else {
-      moveItem(item, char, amount, true);  
-    }
-    
+
   }
 
   // Stores an item.
@@ -386,7 +408,10 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
   var nightfallHash;
   var characterCount = 0;
 
+  $scope.favorites = [];
+
   $scope.openModal = function (item) {
+
     var modalInstance = $modal.open({
       templateUrl: 'itemModal.html',
       controller: 'ModalCtrl',
@@ -615,7 +640,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
         totalCurrencies();
       }
 
-      
+
     });
   }
 
