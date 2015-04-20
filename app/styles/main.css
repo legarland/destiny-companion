@@ -2,6 +2,8 @@ body {
   background-color: dimgray;  
   background: dimgray url(../images/destiny.jpg) no-repeat 0 0;
   background-size: cover;
+	padding-top: 20px;
+	padding-bottom: 100px;
 }
 
 a, [ng-click] { cursor: pointer }
@@ -142,6 +144,10 @@ a, [ng-click] { cursor: pointer }
   z-index: 999;
 }
 
+.item.favorite, .item.currency {
+	width: 75px;	
+}
+
 .item.equipped {
 		width: 105px;
 }
@@ -231,7 +237,8 @@ a, [ng-click] { cursor: pointer }
 .bucket-subtitle {
 	color: #fff;
 	font-weight: bold;
-	margin-bottom: 2px;
+	margin-bottom: 3px;
+	margin-top: 5px;
 }	
 
 .weekly-info {
@@ -346,7 +353,6 @@ div.currency-container {
   margin-bottom: 15px;
   padding: 5px;
   padding-bottom: 0px;
-  background-color: darkgray;
   position: relative;
 }
 
@@ -380,6 +386,7 @@ div.currency-container {
   position: fixed;
   bottom: 0px;
   width: 100%;
+	z-index: 9999999;
 }
 
 #tabHandles {
@@ -393,19 +400,27 @@ div.currency-container {
 
 .tab-handle {
   display: inline-block;
-  border: solid 1px #000;
-  padding: 5px;
-  background-color: #000;
+  padding: 5px 10px;
+  background-color: #fff;
   margin-right: 5px;
   border-bottom: 0px;
+}
+
+.tab-selected {
+	background-color: #4E5C67;
+	color: #fff;
 }
 
 .bottom-tab {
   width: 100%;
   padding: 30px;
-  background-color: #fff;
+  background-color: #4E5C67;
   display: none;
   transition: .5s;
+}
+
+.bottom-tab>div {
+	min-height: 100px;
 }
 
 /*** Loading Icon ***/

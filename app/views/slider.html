@@ -1,0 +1,8 @@
+<div class="amount-slider" style="padding: 20px;">
+ <div class="modal-item-name">How many do you want to transfer?</div>
+  <div range-slider min="minAmount" max="maxAmount" model-min="minAmount" model-max="selectedMax" pin-handle="min"></div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">Transfer ({{ selectedMax }})</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+  </div>
+</div>

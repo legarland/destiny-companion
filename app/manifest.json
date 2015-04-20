@@ -13,9 +13,9 @@
   "default_locale": "en",
   "background": {
     "scripts": [
-      "scripts/chromereload.js",
-      "scripts/background.js",
-      "scripts/bungie.js"
+      "scripts/util/chromereload.js",
+      "scripts/util/background.js",
+      "scripts/util/bungie.js"
     ]
   },
   "browser_action": {
@@ -24,7 +24,7 @@
       "38": "images/icon-38.png"
     }
   },
-  "options_page": "options.html",
+  "options_page": "main.html",
   "permissions": [
     "storage",
     "*://*.bungie.net/*",
