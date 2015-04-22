@@ -9,6 +9,12 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 	$scope.utils = utils;
 	$scope.selectedOwner = '';
 	$scope.showCurrencies = true;
+  $scope.filters = {
+    searchText: '',
+    isArc: false,
+    isVoid: false,
+    isSolar: false    
+  }
 
 	$scope.toggleCurrencies = function () {
 		$scope.showCurrencies = !$scope.showCurrencies;
@@ -232,7 +238,6 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 		char.weeklyStatus.vault.level26.steps = vault26steps;
 		char.weeklyStatus.vault.level30.steps = vault30steps;
 
-		console.log(char);
 	}
 
 	// Load initial user
@@ -317,9 +322,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 
 	function loadInventory(c, count) {
 
-
 		if (c == 'vault') {
-
 			$scope.inventory = $filter('filter')($scope.inventory, {
 				owner: '!' + c
 			});
@@ -327,9 +330,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 			return;
 		}
 
-
 		bungie.inventory(c, function (i) {
-
 			$scope.inventory = $filter('filter')($scope.inventory, {
 				owner: '!' + c
 			});
@@ -383,19 +384,6 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 			}
 		}
 		return undefined;
-	}
-
-	$scope.getMoteCount = function () {
-		var arr = $filter('filter')($scope.inventory, {
-			hash: 937555249
-		});
-		var count = 0;
-		for (var x in arr) {
-			var i = arr[x];
-			count += i.amount;
-		}
-
-		return count;
 	}
 
 });

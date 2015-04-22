@@ -5,11 +5,28 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 	$scope.activeChar = activeChar;
 	$scope.inventory = inventory;
 	$scope.fullItem = 'loading...';
+  $scope.talentNodes = [];
 
 
+  var getTalentNode = function (nodeHash, defs) {
+    angular.forEach(defs, function (def) {
+      if (def.nodeHash == nodeHash)
+        return def;
+    });
+  }
+  
 	var getItem = function (item) {
 		bungie.getItem(item.owner, item.id, function (result) {
-			$scope.fullItem = result.data;
+			var nodes = result.data.talentNodes;
+      var gridHash = result.data.item.talentGridHash
+      var defs = result.definitions.talentGrids[gridHash].nodes;
+      
+      console.log(result);
+      
+      angular.forEach(nodes, function (node) {
+        var tNode = getTalentNode(node.nodeHash);
+        $scope.talentNodes.push({nodeHash: node.nodeHash, name: tNode.steps[0].nodeStepName, desc: tNode.steps[0].nodeStepDescription});
+      });
 		});
 	}
 
@@ -281,4 +298,6 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 	$scope.cancel = function () {
 		$modalInstance.dismiss('cancel');
 	};
+  
+  getItem($scope.clickedItem);
 });

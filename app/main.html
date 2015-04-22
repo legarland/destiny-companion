@@ -22,10 +22,12 @@
 
 		<div class="row">
 			<div class="col-md-4">
-				<div ng-repeat="item in characters" class="character">
+				<div ng-repeat="item in characters" class="character" title="{{ item }}">
 					<div ng-click="selectOwner(item.id)" class="character-card ng-class:{'selected': selectedOwner == item.id}" style="background-image: url(https://www.bungie.net{{ item.background }});">
 						<img class="character-emblem" ng-src="https://bungie.net{{ item.icon }}" />
-						<div class="character-class">{{ item.class }}</div>
+						<div class="character-class">{{ item.class }}
+						  <span class="bounce" ng-if="filters.searchText != '' && (inventory | customFilter:filters | filter:{owner: item.id }).length > 0"><i class="fa fa-arrow-left"></i></span>
+						</div>
 						<div class="character-level">{{ item.level }}</div>
 						<div class="character-progress">
 							<div class="character-progress-bar" style="width: {{ item.percentToNextLevel }}%"></div>
@@ -180,7 +182,9 @@
 				<div class="character vault">
 					<div ng-click="selectOwner('vault')" class="character-card ng-class:{'selected': selectedOwner == 'vault'}">
 						<!--<img class="character-emblem" ng-src="https://bungie.net{{ item.icon }}" />-->
-						<div class="character-class">Vault</div>
+						<div class="character-class">Vault
+						<span class="bounce" ng-if="searchText.length && (inventory | filter:{$:searchText, owner: 'vault' }).length > 0"><i class="fa fa-arrow-left"></i></span>
+						</div>
 						<!--<div class="character-level">{{ item.level }}</div>-->
 
 						<div class="top-right-triangle"></div>
@@ -222,7 +226,7 @@
 					</div>
 					<div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in weaponGrouping">
 						<div class="bucket-subtitle">{{ group }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {$:searchText, displayBucket: 'Weapons', bucket: group, owner: selectedOwner, } | orderBy: ['-equipped','order', 'tier', 'name']" title="{{ item }}" popover="{{ item.name }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader>
+						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Weapons', bucket: group, owner: selectedOwner} | customFilter:filters | orderBy: ['-equipped','order', 'tier', 'name']" title="{{ item }}" popover="{{ item.name }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader>
 							<img class="item-icon" local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -241,7 +245,7 @@
 					</div>
 					<div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in armorGrouping">
 						<div class="bucket-subtitle">{{ group }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: { displayBucket: 'Armor', bucket: group, owner: selectedOwner } | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" title="{{item}}" ng-click="openModal(item)" loader>
+						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {$:searchText, displayBucket: 'Armor', bucket: group, owner: selectedOwner } | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" title="{{item}}" ng-click="openModal(item)" loader>
 							<img class="item-icon" local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -260,7 +264,7 @@
 					</div>
 					<div class="col-xs-6" ng-repeat="(key2, value2) in inventory | itemDisplay: 'Misc' | groupBy: 'bucket' ">
 						<div class="bucket-subtitle">{{ key2 }}</div>
-						<div class="item ng-class:{ 'full': item.complete }" ng-repeat="item in value2 | filter: { owner: selectedOwner } | orderBy: ['order','tier', 'name']" ng-click="openModal(item)" popover="{{ item.name }}" popover-trigger="mouseenter" loader>
+						<div class="item ng-class:{ 'full': item.complete }" ng-repeat="item in value2 | filter: {$:searchText,  owner: selectedOwner } | orderBy: ['order','tier', 'name']" ng-click="openModal(item)" popover="{{ item.name }}" popover-trigger="mouseenter" loader>
 							<img class="item-icon" local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -281,6 +285,7 @@
 			<div class="tab-handle" id="tab1Handle" tabname="favoritesTab">Favorites <span class="badge">{{ (inventory | filter: { favorite: true }).length }}</span>
 			</div>
 			<div class="tab-handle" id="tab2Handle" tabname="currencyTab">Currency</div>
+			<div class="tab-handle" id="tab2Handle" tabname="filtersTab">Filters</div>
 			<div class="tab-handle" id="tab3Handle" tabname="loadoutsTab">Loadouts</div>
 		</div>
 		<div id="tabContainer">
@@ -297,6 +302,20 @@
                 </span>
 					</div>
 				</div>
+			</div>
+			<div id="filtersTab" class="bottom-tab">
+			  <div class="row">
+			    <div class="col-sm-3">
+            <div class="filter-title">Search Filter</div>
+            <div><input type="search" id="searchBox" placeholder="type to filter" ng-model="filters.searchText" class="search-box form-control" /></div>
+			    </div>
+			    <div class="col-sm-3">
+            <div class="filter-title">Damage Type</div>
+            <img src="images/arc.png" class="damage-filter thirdOpacity ng-class:{'fullOpacity':filters.isArc}" ng-click="filters.isArc = !filters.isArc" />&nbsp;
+            <img src="images/void.png" class="damage-filter thirdOpacity ng-class:{'fullOpacity':filters.isVoid}" ng-click="filters.isVoid = !filters.isVoid" />&nbsp;
+            <img src="images/solar.png" class="damage-filter thirdOpacity ng-class:{'fullOpacity':filters.isSolar}" ng-click="filters.isSolar = !filters.isSolar" />
+			    </div>
+			  </div>
 			</div>
 			<div id="loadoutsTab" class="bottom-tab">Loadouts</div>
 			<div id="currencyTab" class="bottom-tab">
