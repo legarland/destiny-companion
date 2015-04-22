@@ -5,28 +5,38 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 	$scope.activeChar = activeChar;
 	$scope.inventory = inventory;
 	$scope.fullItem = 'loading...';
-  $scope.talentNodes = [];
+	$scope.talentNodes = [];
 
 
-  var getTalentNode = function (nodeHash, defs) {
-    angular.forEach(defs, function (def) {
-      if (def.nodeHash == nodeHash)
-        return def;
-    });
-  }
-  
+	var getTalentNode = function (nodeHash, defs) {
+		for (var i = 0; i < defs.length; i++) {
+			var def = defs[i];
+			if (def.nodeHash == nodeHash) {
+				return def;
+			}
+		}
+	}
+
 	var getItem = function (item) {
 		bungie.getItem(item.owner, item.id, function (result) {
 			var nodes = result.data.talentNodes;
-      var gridHash = result.data.item.talentGridHash
-      var defs = result.definitions.talentGrids[gridHash].nodes;
-      
-      console.log(result);
-      
-      angular.forEach(nodes, function (node) {
-        var tNode = getTalentNode(node.nodeHash);
-        $scope.talentNodes.push({nodeHash: node.nodeHash, name: tNode.steps[0].nodeStepName, desc: tNode.steps[0].nodeStepDescription});
-      });
+			var gridHash = result.data.item.talentGridHash
+			var defs = result.definitions.talentGrids[gridHash].nodes;
+
+			angular.forEach(nodes, function (node) {
+				var tNode = getTalentNode(node.nodeHash, defs);
+				console.log(tNode);
+				var step = tNode.steps[0];
+				if (step.nodeStepName !== undefined) {
+					$scope.talentNodes.push({
+						nodeHash: node.nodeHash,
+						name: step.nodeStepName,
+						desc: step.nodeStepDescription,
+						icon: step.icon,
+						state: node.state
+					});
+				}
+			});
 		});
 	}
 
@@ -190,7 +200,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 	}
 
 	var moveItem = function (item, char, amount, isStore) {
-		
+
 
 		// If we didn't pass an amount then just use 1
 		if (amount.length == 0)
@@ -271,9 +281,9 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 			});
 
 		} else if (item.owner == 'vault') {
-			
+
 			console.log('transferring from vault: ' + amount);
-			
+
 			bungie.transfer(char.id, item.id, item.hash, amount, false, function (e, more) {
 				if (more.ErrorCode == 1) {
 					toastr.success('Item successfully transferred.');
@@ -298,6 +308,6 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 	$scope.cancel = function () {
 		$modalInstance.dismiss('cancel');
 	};
-  
-  getItem($scope.clickedItem);
+
+	getItem($scope.clickedItem);
 });
