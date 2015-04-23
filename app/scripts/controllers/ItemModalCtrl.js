@@ -22,21 +22,29 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 			var nodes = result.data.talentNodes;
 			var gridHash = result.data.item.talentGridHash
 			var defs = result.definitions.talentGrids[gridHash].nodes;
+      console.log(nodes);
+      console.log(defs);
 
 			angular.forEach(nodes, function (node) {
 				var tNode = getTalentNode(node.nodeHash, defs);
-				console.log(tNode);
 				var step = tNode.steps[0];
+        
 				if (step.nodeStepName !== undefined) {
 					$scope.talentNodes.push({
 						nodeHash: node.nodeHash,
 						name: step.nodeStepName,
 						desc: step.nodeStepDescription,
 						icon: step.icon,
-						state: node.state
+						state: node.stateId,
+            row: tNode.row,
+            column: tNode.column,
+            activated: node.isActivated,
+            percent: node.progressPercent
 					});
 				}
 			});
+      
+      console.log($scope.talentNodes);
 		});
 	}
 

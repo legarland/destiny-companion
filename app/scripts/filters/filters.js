@@ -5,10 +5,10 @@ angular.module('displayFilters', []).filter('itemDisplay', function () {
 
 
       // Filter out items we dont want
-      if (['Crucible Marks', 'Ghost', 'Emblems', 'Ships', 'Vehicle', 'Vanguard Marks', 'Shaders'].indexOf(item.bucket) == -1) {
+      if (['Crucible Marks', 'Ghost', 'Emblems', 'Ships', 'Vehicle', 'Vanguard Marks'].indexOf(item.bucket) == -1) {
 
         // Group Armor
-        var armorIndex = ['Helmet', 'Gauntlets', 'Chest Armor', 'Leg Armor', 'Class Armor', 'Subclass'].indexOf(item.bucket);
+        var armorIndex = ['Helmet', 'Gauntlets', 'Chest Armor', 'Leg Armor', 'Class Armor', 'Subclass', 'Shaders'].indexOf(item.bucket);
         if (armorIndex != -1) {
           item.order = armorIndex;
           item.displayBucket = "Armor";

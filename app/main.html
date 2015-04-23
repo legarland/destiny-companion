@@ -193,40 +193,13 @@
 				</div>
 			</div>
 			<div class="col-md-8">
-
-				<div class="row filters" ng-if="false">
-					<div class="col-xs-6">
-						<input class="search-box" ng-model="searchText" />
-					</div>
-					<div class="col-xs-6">
-						<div>
-							<select ng-model="rarityFilter">
-								<option selected value="">-- No Filter --</option>
-								<option value="Legendary">Legendary</option>
-								<option value="Exotic">Exotic</option>
-								<option value="Rare">Rare</option>
-								<option value="Uncommon">Uncommon</option>
-							</select>
-
-							<select ng-model="typeFilter">
-								<option selected value="">-- No Filter --</option>
-								<option value="Primary Weapons">Primary Weapon</option>
-								<option value="Special Weapons">Special Weapon</option>
-								<option value="Heavy Weapons">Heavy Weapon</option>
-								<option value="Consumables">Consumables</option>
-								<option value="Shaders">Shaders</option>
-							</select>
-						</div>
-					</div>
-				</div>
-
 				<div class="row bucket-group">
 					<div class="col-xs-12">
 						<div class="bucket-title">Weapons</div>
 					</div>
 					<div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in weaponGrouping">
 						<div class="bucket-subtitle">{{ group }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Weapons', bucket: group, owner: selectedOwner} | customFilter:filters | orderBy: ['-equipped','order', 'tier', 'name']" title="{{ item }}" popover="{{ item.name }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader>
+						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Weapons', bucket: group, owner: selectedOwner} | customFilter:filters | orderBy: ['-equipped','order', 'tier', 'name']" title="{{ item }}" popover="{{ item.name }}" popover-title="{{ item.type }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader>
 							<img class="item-icon" local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -245,7 +218,7 @@
 					</div>
 					<div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in armorGrouping">
 						<div class="bucket-subtitle">{{ group }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {$:searchText, displayBucket: 'Armor', bucket: group, owner: selectedOwner } | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" title="{{item}}" ng-click="openModal(item)" loader>
+						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {$:searchText, displayBucket: 'Armor', bucket: group, owner: selectedOwner } | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" title="{{item}}" popover-title="{{ item.type }}" ng-click="openModal(item)" loader>
 							<img class="item-icon" local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -264,7 +237,7 @@
 					</div>
 					<div class="col-xs-6" ng-repeat="(key2, value2) in inventory | itemDisplay: 'Misc' | groupBy: 'bucket' ">
 						<div class="bucket-subtitle">{{ key2 }}</div>
-						<div class="item ng-class:{ 'full': item.complete }" ng-repeat="item in value2 | filter: {$:searchText,  owner: selectedOwner } | orderBy: ['order','tier', 'name']" ng-click="openModal(item)" popover="{{ item.name }}" popover-trigger="mouseenter" loader>
+						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in value2 | filter: {$:searchText,  owner: selectedOwner } | orderBy: ['order','tier', 'name']" ng-click="openModal(item)" popover="{{ item.name }}" popover-trigger="mouseenter" loader popover-title="{{ item.type }}">
 							<img class="item-icon" local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -291,7 +264,7 @@
 		<div id="tabContainer">
 			<div id="favoritesTab" class="bottom-tab">
 				<div ng-model="favorites">
-					<div class="item favorite ng-class:{ 'full': item.complete }" ng-repeat="item in inventory | filter: { favorite: true } | orderBy: ['tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader>
+					<div class="item favorite ng-class:{ 'full': item.complete }" ng-repeat="item in inventory | filter: { favorite: true } | orderBy: ['tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader popover-title="{{ item.type }}">
 						<img class="item-icon" local-image />
 						<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 						<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -360,7 +333,7 @@
 	<script type="text/javascript" src="scripts/directives/directives.js"></script>
 
 	<!-- build:js scripts/options.js -->
-	<script src="scripts/util/options.js"></script>
+	
 	<!-- endbuild -->
 </body>
 

@@ -91,7 +91,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 	};
 
 	// Arrays used for order/grouping 
-	$scope.armorGrouping = ['Helmet', 'Gauntlets', 'Chest Armor', 'Leg Armor', 'Class Armor', 'Subclass'];
+	$scope.armorGrouping = ['Helmet', 'Gauntlets', 'Chest Armor', 'Leg Armor', 'Class Armor', 'Subclass', 'Shaders'];
 	$scope.weaponGrouping = ['Primary Weapons', 'Special Weapons', 'Heavy Weapons'];
 
 	var advisors = [];
