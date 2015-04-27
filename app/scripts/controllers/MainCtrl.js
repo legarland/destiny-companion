@@ -1,7 +1,7 @@
-myApp.controller('MainController', function ($scope, bungie, utils, $filter, $timeout, $modal) {
+myApp.controller('MainController', function ($scope, bungie, utils, $filter, $timeout, $modal, toastr) {
 
-	//chrome.storage.local.clear();
 
+	// Initial scope variables
 	$scope.user = {};
 	$scope.vault = 'loading';
 	$scope.characters = [];
@@ -9,13 +9,45 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 	$scope.utils = utils;
 	$scope.selectedOwner = '';
 	$scope.showCurrencies = true;
-  $scope.filters = {
-    searchText: '',
-    isArc: false,
-    isVoid: false,
-    isSolar: false    
-  }
-
+	var filtersDef = {
+		searchText: '',
+		isArc: false,
+		isVoid: false,
+		isSolar: false
+	};
+	$scope.filters = jQuery.extend(true, {}, filtersDef);
+	$scope.utils = utils;
+	$scope.loadouts = [
+		{
+			name: "Void Dmg",
+			gear: [
+				{
+					itemHash: '437329200',
+					id: '6917529047222799501'
+				},
+				{
+					itemHash: '560601823',
+					id: '6917529039957816555'
+				},
+				{
+					itemHash: '1274330687',
+					id: '6917529044481447250'
+				},
+				{
+					itemHash: '3577254054',
+					id: '6917529046872368210'
+				},
+				{
+					itemHash: '1462595581',
+					id: '6917529039613630160'
+				},
+				{
+					itemHash: '2450884227',
+					id: '6917529046290436811'
+				}
+		]
+	}
+]
 	$scope.toggleCurrencies = function () {
 		$scope.showCurrencies = !$scope.showCurrencies;
 	}
@@ -91,7 +123,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 	};
 
 	// Arrays used for order/grouping 
-	$scope.armorGrouping = ['Helmet', 'Gauntlets', 'Chest Armor', 'Leg Armor', 'Class Armor', 'Subclass', 'Shaders'];
+	$scope.armorGrouping = ['Helmet', 'Gauntlets', 'Chest Armor', 'Leg Armor', 'Class Armor', 'Subclass', 'Shaders', 'Emblems'];
 	$scope.weaponGrouping = ['Primary Weapons', 'Special Weapons', 'Heavy Weapons'];
 
 	var advisors = [];
@@ -99,6 +131,14 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 	var characterCount = 0;
 
 	$scope.favorites = [];
+
+	$scope.getItemIcon = function (hash) {
+		for (var i = 0; i < $scope.inventory.length; i++) {
+			var item = $scope.inventory[i];
+			if (item.hash == hash)
+				return item.icon;
+		}
+	}
 
 	$scope.openModal = function (item) {
 
@@ -172,8 +212,6 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 			});
 			value.amount = amount;
 		});
-
-		//$scope.$apply();
 	}
 
 	function updateWeeklies() {
@@ -241,69 +279,89 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 	}
 
 	// Load initial user
+	toastr.info('Loading bungie.net user profile', {
+		timeOut: 0
+	});
 	bungie.user(function (u) {
-
 		if (u.error) {
-			// TODO: Tell User to login.
+			toastr.clear();
+			toastr.error('Please visit bungie.net and sign in.');
 			return;
 		}
-
+		toastr.clear();
 		$scope.user = u;
-		//$scope.$apply();
 		loadUser();
 	});
 
 	// Loads the user from bungie which then triggers the loading of inventory, vault, etc.
 	function loadUser() {
 
+		toastr.info('Loading advisor data', {
+			timeOut: 0
+		});
 		bungie.advisors(function (data) {
 			advisors = data.data;
 			nightfallHash = advisors.nightfallActivityHash
-		});
 
-		// Grab user info
-		bungie.search(function (e) {
-			if (e.error) {
-				printError('Bungie.net user found, but was unable to find your linked ' + (bungie.active().type == 1 ? 'Xbox' : 'PSN') + ' account.');
-				return;
-			}
+			toastr.clear();
+			// Grab user info
+			bungie.search(function (e) {
+				if (e.error) {
 
-			// Load the vault
-			bungie.vault(function (v) {
-				if (v === undefined) {
-					printError('Bungie.net user found, but was unable to find your linked ' + (bungie.active().type == 1 ? 'Xbox' : 'PSN') + ' account.');
+					toastr.error('Error loading user. Make sure your console account is linked to your bungie.net profile', {
+						timeOut: 0
+					});
 					return;
 				}
 
-				$scope.inventory = [];
-				utils.appendItems('vault', utils.flattenVault(v.data), $scope.inventory);
+				toastr.clear();
+				toastr.info('Loading character inventory', {
+					timeOut: 0
+				});
+				// Load the vault
+				bungie.vault(function (v) {
+					if (v === undefined) {
+						toastr.error('Error loading user. Make sure your console account is linked to your bungie.net profile', {
+							timeOut: 0
+						});
+						return;
+						return;
+					}
 
-				var avatars = e.data.characters;
-				characterCount = avatars.length;
+					$scope.inventory = [];
+					utils.appendItems('vault', utils.flattenVault(v.data), $scope.inventory);
 
-				for (var c = 0; c < avatars.length; c++) {
-					var currentChar = avatars[c];
-					var id2 = currentChar.characterBase.characterId;
-					$scope.characters.push({
-						id: id2,
-						icon: currentChar.emblemPath,
-						background: currentChar.backgroundPath,
-						level: currentChar.characterLevel,
-						class: utils.getClass(currentChar.characterBase.classType),
-						percentToNextLevel: currentChar.percentToNextLevel
-					});
+					var avatars = e.data.characters;
+					characterCount = avatars.length;
 
-					// Load Character Inventory
+					for (var c = 0; c < avatars.length; c++) {
+						var currentChar = avatars[c];
+						var id2 = currentChar.characterBase.characterId;
+						$scope.characters.push({
+							id: id2,
+							icon: currentChar.emblemPath,
+							background: currentChar.backgroundPath,
+							level: currentChar.characterLevel,
+							class: utils.getClass(currentChar.characterBase.classType),
+							percentToNextLevel: currentChar.percentToNextLevel
+						});
 
-					loadInventory(id2, c);
-					loadActivities(id2);
+						// Load Character Inventory
+						loadInventory(id2, c);
+						loadActivities(id2);
 
-					$scope.selectOwner($scope.characters[0].id);
-				}
+						$scope.selectOwner($scope.characters[0].id);
+					}
+
+				});
 
 			});
 
+
+
 		});
+
+
 	}
 
 	function loadActivities(id) {
@@ -348,6 +406,8 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 			});
 
 			if (count != null && count == characterCount - 1) {
+				toastr.clear();
+				$scope.$apply();
 				$timeout(function () {
 					loadWeeklyHashes();
 					totalCurrencies();

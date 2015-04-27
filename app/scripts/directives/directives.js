@@ -126,6 +126,8 @@ myApp.directive('localImage', ['$parse', 'utils', function ($parse, utils) {
     restrict: 'AE',
     link: function (scope, element, attr) {
 
+			element.html('Loading perks..');
+			
       var isSublcass = scope.clickedItem.bucket == 'Subclass';
 
       scope.$watch('talentNodes', function (newVal, oldVal) {
@@ -196,8 +198,8 @@ myApp.directive('localImage', ['$parse', 'utils', function ($parse, utils) {
             context.translate(cWidthHeight/2, cWidthHeight/2);
             context.rotate(90*Math.PI/180);
             context.translate(-cWidthHeight, -cWidthHeight);
-            var x = canvas.width / 2;
-            var y = canvas.height / 2;
+            var x = canvas.width;
+            var y = canvas.height;
             var radius = rad;
             var startAngle = 0;
             var endAngle = (Math.PI * 2 * per);
@@ -211,8 +213,7 @@ myApp.directive('localImage', ['$parse', 'utils', function ($parse, utils) {
 
             // line color
             context.strokeStyle = '#47FC0C';
-            context.stroke();
-            
+            context.stroke();            
             
             
             var canvasBG = document.createElement('canvas');

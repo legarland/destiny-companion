@@ -22,13 +22,13 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 			var nodes = result.data.talentNodes;
 			var gridHash = result.data.item.talentGridHash
 			var defs = result.definitions.talentGrids[gridHash].nodes;
-      console.log(nodes);
-      console.log(defs);
+			console.log(nodes);
+			console.log(defs);
 
 			angular.forEach(nodes, function (node) {
 				var tNode = getTalentNode(node.nodeHash, defs);
 				var step = tNode.steps[0];
-        
+
 				if (step.nodeStepName !== undefined) {
 					$scope.talentNodes.push({
 						nodeHash: node.nodeHash,
@@ -36,15 +36,15 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 						desc: step.nodeStepDescription,
 						icon: step.icon,
 						state: node.stateId,
-            row: tNode.row,
-            column: tNode.column,
-            activated: node.isActivated,
-            percent: node.progressPercent
+						row: tNode.row,
+						column: tNode.column,
+						activated: node.isActivated,
+						percent: node.progressPercent
 					});
 				}
 			});
-      
-      console.log($scope.talentNodes);
+
+			console.log($scope.talentNodes);
 		});
 	}
 
@@ -93,7 +93,8 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 							} else {
 
 								// Not necessarily vault is full. Need to investigate
-								utils.error(more, "Vault is full. At least 1 free vault space is needed to transfer items between characters.");
+								utils.error(more, more.ErrorMessage);
+								item.loading = false;
 							}
 
 							$modalInstance.close(null);
@@ -108,7 +109,8 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 							loadInventory('vault');
 							utils.success(more, 'Item successfully moved to vault.');
 						} else {
-							utils.error(more, "Vault is full. At least 1 free vault space is needed to transfer items between characters.");
+							utils.error(more, more.ErrorMessage);
+							item.loading = false;
 						}
 
 						$modalInstance.close(null);

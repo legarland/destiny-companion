@@ -218,7 +218,7 @@
 					</div>
 					<div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in armorGrouping">
 						<div class="bucket-subtitle">{{ group }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {$:searchText, displayBucket: 'Armor', bucket: group, owner: selectedOwner } | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" title="{{item}}" popover-title="{{ item.type }}" ng-click="openModal(item)" loader>
+						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Armor', bucket: group, owner: selectedOwner } | customFilter:filters | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" title="{{item}}" popover-title="{{ item.type }}" ng-click="openModal(item)" loader>
 							<img class="item-icon" local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -237,7 +237,7 @@
 					</div>
 					<div class="col-xs-6" ng-repeat="(key2, value2) in inventory | itemDisplay: 'Misc' | groupBy: 'bucket' ">
 						<div class="bucket-subtitle">{{ key2 }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in value2 | filter: {$:searchText,  owner: selectedOwner } | orderBy: ['order','tier', 'name']" ng-click="openModal(item)" popover="{{ item.name }}" popover-trigger="mouseenter" loader popover-title="{{ item.type }}">
+						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in value2 | filter: {owner: selectedOwner } | customFilter:filters | orderBy: ['order','tier', 'name']" ng-click="openModal(item)" popover="{{ item.name }}" popover-trigger="mouseenter" loader popover-title="{{ item.type }}">
 							<img class="item-icon" local-image />
 							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
 							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
@@ -258,7 +258,9 @@
 			<div class="tab-handle" id="tab1Handle" tabname="favoritesTab">Favorites <span class="badge">{{ (inventory | filter: { favorite: true }).length }}</span>
 			</div>
 			<div class="tab-handle" id="tab2Handle" tabname="currencyTab">Currency</div>
-			<div class="tab-handle" id="tab2Handle" tabname="filtersTab">Filters</div>
+			<div class="tab-handle" id="tab2Handle" tabname="filtersTab">Filters <span class="badge">
+				{{ utils.countFilters(filters) }}
+			</span></div>
 			<div class="tab-handle" id="tab3Handle" tabname="loadoutsTab">Loadouts</div>
 		</div>
 		<div id="tabContainer">
@@ -290,7 +292,16 @@
 			    </div>
 			  </div>
 			</div>
-			<div id="loadoutsTab" class="bottom-tab">Loadouts</div>
+			<div id="loadoutsTab" class="bottom-tab">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="loadout" ng-repeat="loadout in loadouts">
+							<img ng-repeat="g in loadout.gear" ng-src="https://bungie.net{{ getItemIcon(g.itemHash) }}" />
+							<div class="loadout-name clear">{{ loadout.name }}</div>
+						</div>
+					</div>
+				</div>				
+			</div>
 			<div id="currencyTab" class="bottom-tab">
 				<div class="row total-currencies" ng-if="showCurrencies">
 					<div class="col-xs-12">

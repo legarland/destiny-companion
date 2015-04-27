@@ -199,6 +199,20 @@ angular.module('myApp').service('utils', function ($filter, toastr) {
 			return arr[0];	
 		}
 	}
+	
+	this.countFilters = function(filters) {
+		var count = 0;
+		if (filters.searchText != '')
+			count ++;
+		if (filters.isArc)
+			count ++;
+		if (filters.isSolar)
+			count ++;
+		if (filters.isVoid)
+			count ++;
+		
+		return count;
+	}
 		
 
 });
