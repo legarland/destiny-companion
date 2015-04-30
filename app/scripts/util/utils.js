@@ -112,6 +112,27 @@ angular.module('myApp').service('utils', function ($filter, toastr) {
 
 		}
 	}
+  
+  this.getDamageTypeName = function (type) {
+
+    switch(type) {
+      case 0:
+        return 'Kinetic';
+        break;
+      case 2: 
+        return 'Arc';
+        break;
+      case 3: 
+        return 'Solar';
+        break;
+      case 4:
+        return 'Void';
+        break;
+      default: 
+        return 'Kinetic';
+        break;
+    }
+  }
 
 	// Check if a stat of a certain type exists on this object.
 	// [data] is expected to be the stats array of an inventory item.

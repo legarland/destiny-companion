@@ -126,9 +126,15 @@ myApp.directive('localImage', ['$parse', 'utils', function ($parse, utils) {
     restrict: 'AE',
     link: function (scope, element, attr) {
 
-			element.html('Loading perks..');
+      if (['Shaders', 'Emblems'].indexOf(scope.clickedItem.bucket) != -1)
+        return;
+      
+      if (scope.clickedItem.displayBucket == 'Misc')
+        return; 
+      
+			$(element[0]).html('Loading perks..');
 			
-      var isSublcass = scope.clickedItem.bucket == 'Subclass';
+      var isSublcass = scope.clickedItem.bucket == 'Subclass' || scope.clickedItem.name == 'Murmur';
 
       scope.$watch('talentNodes', function (newVal, oldVal) {
 

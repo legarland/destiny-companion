@@ -4,19 +4,22 @@
 	</div>
 	<img class="modal-item-icon" ng-src="http://www.bungie.net{{ clickedItem.icon }}" />
 	<div class="modal-item-name">{{ clickedItem.name }}</div>
-	<div class="modal-item-type">{{ clickedItem.hash }} -- {{ clickedItem.id }}</div>
+	<div class="modal-item-type">{{ clickedItem.type }}</div>
+	<div class="modal-item-damage" ng-if="['Weapons','Armor'].indexOf(clickedItem.displayBucket) != -1">{{ clickedItem.displayBucket == 'Weapons' ? getDamageTypeName(clickedItem.damageType) : '' }} {{ clickedItem.primStat.value }}</div>
 
 	<div class="action-buttons">
 		<div class="action-button-container equip">
-			Equip
-			<a ng-repeat="char in characters | equipFilter:activeChar:clickedItem" ng-click="equip(clickedItem, char, 1)" popover="{{ char.class + ' (' + char.level + ')' }}" popover-trigger="mouseenter">
+			<div class="action-button-title">Equip</div>
+			<a ng-repeat="char in characters | equipFilter:activeChar:clickedItem" ng-click="equip(clickedItem, char, 1)" >
 				<img ng-src="http://bungie.net{{ char.icon }}" />
+				<div class="text-center">{{char.class}}</div>
 			</a>
 		</div>
 		<div class="action-button-container store">
-			Store
-			<a ng-repeat="char in characters | storeFilter:activeChar:clickedItem" popover="{{ char.class + ' (' + char.level + ')' }}" popover-trigger="mouseenter" ng-click="store(clickedItem, char, 1)">
+			<div class="action-button-title">Store</div>
+			<a ng-repeat="char in characters | storeFilter:activeChar:clickedItem" popover="{{ char.class + ' (' + char.level + ')' }}">
 				<img ng-src="http://bungie.net{{ char.icon }}" />
+				<div class="text-center">{{char.class}}</div>
 			</a>
 		</div>
 		<button ng-if="clickedItem.owner != 'vault'" ng-click="moveToVault(clickedItem, 1)" class="btn btn-primary">Move to Vault</button>

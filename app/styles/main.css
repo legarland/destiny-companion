@@ -319,6 +319,11 @@ a, [ng-click] { cursor: pointer }
 	font-size: 16px;
 }
 
+.modal-item-damage {
+  font-size: 14px;
+  font-weight: bold;
+}
+
 .modal-item-fav {
   float: right;
 }
@@ -351,9 +356,25 @@ a, [ng-click] { cursor: pointer }
 	color: darkred;
 }
 
+.action-button-container a {
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin-right: 10px;
+}
+
+.action-button-container a:last-child {
+  margin-right: 0px;
+}
+
+.action-button-title {
+  text-align: center;
+  margin-bottom: 3px;
+}
+
 .action-button-container img {
-	height: 35px;
-	margin-left: 5px;
+	height: 50px;
+	
 }
 
 div.currency-container {

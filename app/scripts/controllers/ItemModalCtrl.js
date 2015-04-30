@@ -6,6 +6,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 	$scope.inventory = inventory;
 	$scope.fullItem = 'loading...';
 	$scope.talentNodes = [];
+  $scope.getDamageTypeName = utils.getDamageTypeName;
 
 
 	var getTalentNode = function (nodeHash, defs) {
@@ -22,8 +23,6 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 			var nodes = result.data.talentNodes;
 			var gridHash = result.data.item.talentGridHash
 			var defs = result.definitions.talentGrids[gridHash].nodes;
-			console.log(nodes);
-			console.log(defs);
 
 			angular.forEach(nodes, function (node) {
 				var tNode = getTalentNode(node.nodeHash, defs);
@@ -44,7 +43,6 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 				}
 			});
 
-			console.log($scope.talentNodes);
 		});
 	}
 
@@ -59,8 +57,6 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 
 		if (localStorage.favs != undefined)
 			favs = JSON.parse(localStorage.favs);
-
-		console.log(favs);
 
 		if (!$scope.clickedItem.favorite) {
 			for (var i = 0; i < favs.length; i++) {
@@ -252,7 +248,6 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 			// transfer to vault first.
 			bungie.transfer(item.owner, item.id, item.hash, amount, true, function (e, more) {
 
-				console.log(more);
 				if (more.ErrorCode == 1) {
 
 					// Now movie item from vault to new char
@@ -291,9 +286,6 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 			});
 
 		} else if (item.owner == 'vault') {
-
-			console.log('transferring from vault: ' + amount);
-
 			bungie.transfer(char.id, item.id, item.hash, amount, false, function (e, more) {
 				if (more.ErrorCode == 1) {
 					toastr.success('Item successfully transferred.');
