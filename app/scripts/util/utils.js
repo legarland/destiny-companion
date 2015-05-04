@@ -94,6 +94,8 @@ angular.module('myApp').service('utils', function ($filter, toastr) {
 				hash: item.itemHash,
 				type: itemDef.type,
 				//sort: itemSort,
+        primaryStatMax: itemDef.primaryStatMax,
+        primaryStatMin: itemDef.primaryStatMin,
 				tier: itemDef.tier,
 				name: itemDef.name,
 				icon: itemDef.icon,
@@ -107,7 +109,8 @@ angular.module('myApp').service('utils', function ($filter, toastr) {
 				amount: item.stackSize,
 				primStat: item.primaryStat,
 				stats: item.stats,
-				damageType: item.damageType
+				damageType: item.damageType,
+        progression: item.progression
 			});
 
 		}

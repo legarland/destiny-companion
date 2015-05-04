@@ -167,6 +167,14 @@ a, [ng-click] { cursor: pointer }
   z-index: 1;
 }
 
+.item .item-xp-bar {
+  width: 100%;
+  position: absolute;
+  height: 6px;
+  background-color: limegreen;
+  bottom: 0;
+}
+
 .item .attack {
   bottom: 0px;
   right: 3px;
