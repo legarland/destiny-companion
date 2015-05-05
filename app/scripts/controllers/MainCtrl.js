@@ -413,6 +413,11 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
         user.glimmer = currencies[0].value;
         user.vanguardMarks = currencies[2].value;
         user.crucibleMarks = currencies[1].value;
+
+        bungie.activityHistory(c, function (data) {
+          console.log(data);
+        })
+
         //$scope.$apply();
       });
 

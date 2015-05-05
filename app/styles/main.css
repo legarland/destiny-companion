@@ -30,6 +30,7 @@ a, [ng-click] { cursor: pointer }
 	cursor: pointer;
 	position: relative;
 	margin-right: 20px;
+	margin-right: 20px;
 	transition: .5s;
 }
 
@@ -173,6 +174,7 @@ a, [ng-click] { cursor: pointer }
   height: 6px;
   background-color: limegreen;
   bottom: 0;
+  display: none;
 }
 
 .item .attack {
@@ -258,11 +260,29 @@ a, [ng-click] { cursor: pointer }
 	margin-bottom: 20px;
 }
 
+.activity-level {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.activity-status {
+  margin-right: 3px;
+  font-size: 16px;
+  font-weight: normal;
+  color: red;
+}
+
+.activity-status.fa-check {
+  color: green;
+}
+
 .activity-icon {
 	float: left;
 	width: 40px;
 	margin-right: 10px;
 }
+
+
 
 .activity-icon img {
 	width: 100%;	
@@ -271,6 +291,10 @@ a, [ng-click] { cursor: pointer }
 
 .activity-icon img.completed {
   opacity: 1;
+}
+
+.activity-name {
+  font-size: 16px;
 }
 
 .currencies {

@@ -150,6 +150,26 @@ angular.module('myApp').service('bungie', function () {
       complete: callback
     });
   }
+  this.activityHistory = function (characterId, callback) {
+
+    var strRoute =  '/Destiny/Stats/ActivityHistory/' + active.type + '/' + membershipId + '/' + characterId + '?mode=Nightfall&count=100&page=0&definitions=true';
+    console.log(strRoute);
+    _request({
+      route: strRoute,
+      method: 'GET',
+      complete: callback
+    });
+  }
+  this.progression = function (characterId, callback) {
+    _request({
+      route: '/Destiny/' + active.type +
+        '/Account/' + membershipId +
+        '/Character/' + characterId +
+        '/Progression/?definitions=false',
+      method: 'GET',
+      complete: callback
+    });
+  }
 	this.activities = function (characterId, callback) {
 		_request({
       route: '/Destiny/' + active.type +

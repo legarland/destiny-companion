@@ -17,7 +17,7 @@
 		</div>
 		<div class="action-button-container store">
 			<div class="action-button-title">Store</div>
-			<a ng-repeat="char in characters | storeFilter:activeChar:clickedItem" popover="{{ char.class + ' (' + char.level + ')' }}">
+			<a ng-repeat="char in characters | storeFilter:activeChar:clickedItem" popover="{{ char.class + ' (' + char.level + ')' }}" ng-click="store(clickedItem, char, 1)">
 				<img ng-src="http://bungie.net{{ char.icon }}" />
 				<div class="text-center">{{char.class}}</div>
 			</a>

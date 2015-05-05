@@ -20,9 +20,18 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 
 	var getItem = function (item) {
 		bungie.getItem(item.owner, item.id, function (result) {
+
+			if (result === undefined || result.data.talentNodes === undefined)
+				return;
+
 			var nodes = result.data.talentNodes;
-			var gridHash = result.data.item.talentGridHash
-			var defs = result.definitions.talentGrids[gridHash].nodes;
+			var gridHash = result.data.item.talentGridHash;
+      var hashDefs = result.definitions.talentGrids[gridHash];
+
+      if (hashDefs === undefined)
+        return;
+
+			var defs = hashDefs.nodes;
 
 			angular.forEach(nodes, function (node) {
 				var tNode = getTalentNode(node.nodeHash, defs);
@@ -75,68 +84,68 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 	// Moves an item to the vault
 	$scope.moveToVault = function (item, amount) {
 
-			var doMove = function (amt) {
-				item.loading = true;
-				if (item.equipped) {
-					dequip(item, function () {
-						item.equipped = false;
+		var doMove = function (amt) {
+			item.loading = true;
+			if (item.equipped) {
+				dequip(item, function () {
+					item.equipped = false;
 
-						bungie.transfer(item.owner, item.id, item.hash, amt, true, function (result, more) {
-							if (more.ErrorStatus == "Success") {
-								loadInventory(item.owner);
-								loadInventory('vault');
-								utils.success(more, 'Item successfully moved to vault.');
-							} else {
-
-								// Not necessarily vault is full. Need to investigate
-								utils.error(more, more.ErrorMessage);
-								item.loading = false;
-							}
-
-							$modalInstance.close(null);
-						});
-
-					});
-					return;
-				} else {
 					bungie.transfer(item.owner, item.id, item.hash, amt, true, function (result, more) {
 						if (more.ErrorStatus == "Success") {
 							loadInventory(item.owner);
 							loadInventory('vault');
 							utils.success(more, 'Item successfully moved to vault.');
 						} else {
+
+							// Not necessarily vault is full. Need to investigate
 							utils.error(more, more.ErrorMessage);
 							item.loading = false;
 						}
 
 						$modalInstance.close(null);
 					});
-				}
-			}
-
-			if (item.amount > 1) {
-
-				var modalInstance = $modal.open({
-					templateUrl: 'views/slider.html',
-					controller: 'SliderCtrl',
-					backdrop: 'static',
-					size: 'md',
-					resolve: {
-						item: function () {
-							return item;
-						}
-					}
-				});
-
-				modalInstance.result.then(function (maxAmount) {
-					doMove(maxAmount);
-				}, function () {
 
 				});
-
+				return;
 			} else {
-				doMove(amount);
+				bungie.transfer(item.owner, item.id, item.hash, amt, true, function (result, more) {
+					if (more.ErrorStatus == "Success") {
+						loadInventory(item.owner);
+						loadInventory('vault');
+						utils.success(more, 'Item successfully moved to vault.');
+					} else {
+						utils.error(more, more.ErrorMessage);
+						item.loading = false;
+					}
+
+					$modalInstance.close(null);
+				});
 			}
+		}
+
+		if (item.amount > 1) {
+
+			var modalInstance = $modal.open({
+				templateUrl: 'views/slider.html',
+				controller: 'SliderCtrl',
+				backdrop: 'static',
+				size: 'md',
+				resolve: {
+					item: function () {
+						return item;
+					}
+				}
+			});
+
+			modalInstance.result.then(function (maxAmount) {
+				doMove(maxAmount);
+			}, function () {
+
+				});
+
+		} else {
+			doMove(amount);
+		}
 
 
 		}
@@ -166,7 +175,7 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 				moveItem(item, char, maxAmount, true);
 			}, function () {
 
-			});
+				});
 		} else {
 			moveItem(item, char, amount, true);
 		}

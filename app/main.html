@@ -2,352 +2,276 @@
 <html ng-app="myApp" ng-csp="">
 
 <head>
-	<!-- build:css styles/vendor.css -->
-	<!-- bower:css -->
-	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-	<link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
-	<link rel="stylesheet" href="bower_components/angular-rangeslider/angular.rangeSlider.css" />
-	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
-	<!-- endbower -->
-	<!-- endbuild -->
-	<!-- build:css styles/main.css -->
-	<link href="styles/main.css" rel="stylesheet">
-	<!-- endbuild -->
-
+  <!-- build:css styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
+  <link rel="stylesheet" href="bower_components/angular-rangeslider/angular.rangeSlider.css" />
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css styles/main.css -->
+  <link href="styles/main.css" rel="stylesheet">
+  <!-- endbuild -->
 </head>
 
 <body ng-controller="MainController">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4">
+        <div ng-repeat="item in characters" class="character">
+          <div ng-click="selectOwner(item.id)" class="character-card ng-class:{'selected': selectedOwner == item.id}" style="background-image: url(https://www.bungie.net{{ item.background }});">
+            <img class="character-emblem" ng-src="https://bungie.net{{ item.icon }}" />
+            <div class="character-class">{{ item.class }}
+              <span class="bounce" ng-if="filters.searchText != '' && (inventory | customFilter:filters | filter:{owner: item.id }).length > 0">
+									<i class="fa fa-arrow-left"></i>
+								</span>
+            </div>
+            <div class="character-level">{{ item.level }}</div>
+            <div class="character-progress">
+              <div class="character-progress-bar" style="width: {{ item.percentToNextLevel }}%"></div>
+            </div>
+            <div class="top-right-triangle"></div>
+            <div class="bottom-right-triangle"></div>
+          </div>
+          <div class="character-info" ng-class="{ 'selected': item.id == selectedOwner }">
+            <div class="character-info-inner">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="title">Currency</div>
+                </div>
+              </div>
+              <div class="row currencies">
+                <div class="col-xs-4">
+                  <div class="currency-icon glimmer"></div>
+                  <div class="currency-amount">{{ item.glimmer }}</div>
+                </div>
+                <div class="col-xs-4">
+                  <div class="currency-icon vanguard"></div>
+                  <div class="currency-amount">{{ item.vanguardMarks }}</div>
+                </div>
+                <div class="col-xs-4">
+                  <div class="currency-icon"></div>
+                  <div class="currency-amount">{{ item.crucibleMarks }}</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="title">Weekly Activities</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="weekly-info">
+                    <div class="weekly-activity">
+                      <div class="activity-name">Heroic Strike</div>
+                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.heroic.level24}"></i><strong>24</strong>
+                      </div>
 
-	<div class="container-fluid">
+                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.heroic.level28}"></i><strong>28</strong>
+                      </div>
 
-		<div class="row">
-			<div class="col-md-4">
-				<div ng-repeat="item in characters" class="character">
-					<div ng-click="selectOwner(item.id)" class="character-card ng-class:{'selected': selectedOwner == item.id}" style="background-image: url(https://www.bungie.net{{ item.background }});">
-						<img class="character-emblem" ng-src="https://bungie.net{{ item.icon }}" />
-						<div class="character-class">{{ item.class }}
-						  <span class="bounce" ng-if="filters.searchText != '' && (inventory | customFilter:filters | filter:{owner: item.id }).length > 0"><i class="fa fa-arrow-left"></i></span>
-						</div>
-						<div class="character-level">{{ item.level }}</div>
-						<div class="character-progress">
-							<div class="character-progress-bar" style="width: {{ item.percentToNextLevel }}%"></div>
-						</div>
+                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.heroic.level30}"></i><strong>30</strong>
+                      </div>
+                    </div>
+                    <div class="weekly-activity">
+                      <div class="activity-name">Nightfall Strike</div>
+                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.nightfall}"></i><strong>30</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="weekly-info">
+                    <div class="weekly-activity">
+                      <div class="activity-name">Vault of Glass</div>
+                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.vault.level26.steps > 0}"></i><strong>Normal</strong>
+                      </div>
 
-						<div class="top-right-triangle"></div>
-						<div class="bottom-right-triangle"></div>
-					</div>
-					<div class="character-info" ng-class="{ 'selected': item.id == selectedOwner }">
-						<div class="character-info-inner">
-							<div class="row">
-								<div class="col-xs-12">
-									<div class="title">Currency</div>
-								</div>
-							</div>
-							<div class="row currencies">
-								<div class="col-xs-4">
-									<div class="currency-icon glimmer"></div>
-									<div class="currency-amount">{{ item.glimmer }}</div>
-								</div>
-								<div class="col-xs-4">
-									<div class="currency-icon vanguard"></div>
-									<div class="currency-amount">{{ item.vanguardMarks }}</div>
-								</div>
-								<div class="col-xs-4">
-									<div class="currency-icon"></div>
-									<div class="currency-amount">{{ item.crucibleMarks }}</div>
-								</div>
-							</div>
+                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.vault.level30.steps > 0}"></i><strong>Hard</strong>
+                      </div>
+                    </div>
 
-							<div class="row">
-								<div class="col-xs-12">
-									<div class="title">Weekly Activities</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-6">
-									<div class="weekly-info">
-										<div class="weekly-activity">
-											<div class="activity-icon">
-												<img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_featured.png" ng-class="{'completed': item.weeklyStatus.heroic.level24}">
-											</div>
-											<div class="activity-details">
-												<div class="activity-name">
-													Weekly Heroic Strike </div>
-												<div class="activity-level">
-													Level <strong>24</strong>
-												</div>
-											</div>
-										</div>
+                    <div class="weekly-activity">
+                      <div class="activity-name">Crota's End</div>
+                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.crota.level30.steps > 0}"></i><strong>Normal</strong>
+                      </div>
 
-										<div class="weekly-activity">
-											<div class="activity-icon">
-												<img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_featured.png" ng-class="{'completed': item.weeklyStatus.heroic.level28}">
-											</div>
-											<div class="activity-details">
-												<div class="activity-name">
-													Weekly Heroic Strike </div>
-												<div class="activity-level">
-													Level <strong>28</strong>
-												</div>
-											</div>
-										</div>
-
-										<div class="weekly-activity">
-											<div class="activity-icon">
-												<img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_featured.png" ng-class="{'completed': item.weeklyStatus.heroic.level30}">
-											</div>
-											<div class="activity-details">
-												<div class="activity-name">
-													Weekly Heroic Strike </div>
-												<div class="activity-level">
-													Level <strong>30</strong>
-												</div>
-											</div>
-										</div>
-
-										<div class="weekly-activity">
-											<div class="activity-icon">
-												<img src="https://www.bungie.net/img/theme/destiny/icons/node_strike_nightfall.png" ng-class="{'completed': item.weeklyStatus.nightfall}" title="{{ item.weeklyStatus }}">
-											</div>
-											<div class="activity-details">
-												<div class="activity-name">
-													Weekly Nightfall Strike </div>
-												<div class="activity-level">
-													Level <strong>30</strong>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-6">
-									<div class="weekly-info">
-										<div class="weekly-activity">
-											<div class="activity-icon">
-												<img src="https://www.bungie.net/common/destiny_content/icons/7b25eb30fc5e93493eada0c15871192a.png" ng-class="{'completed': item.weeklyStatus.vault.level26.steps > 0}">
-											</div>
-											<div class="activity-details">
-												<div class="activity-name">
-													Vault of Glass </div>
-												<div class="activity-level">
-													Level <strong>26</strong>
-												</div>
-											</div>
-										</div>
-
-										<div class="weekly-activity">
-											<div class="activity-icon">
-												<img src="https://www.bungie.net/common/destiny_content/icons/7b25eb30fc5e93493eada0c15871192a.png" ng-class="{'completed': item.weeklyStatus.vault.level30.steps > 0}">
-											</div>
-											<div class="activity-details">
-												<div class="activity-name">
-													Vault of Glass </div>
-												<div class="activity-level">
-													Level <strong>30</strong>
-												</div>
-											</div>
-										</div>
-
-										<div class="weekly-activity">
-											<div class="activity-icon">
-												<img src="https://www.bungie.net/common/destiny_content/icons/7b25eb30fc5e93493eada0c15871192a.png" ng-class="{'completed': item.weeklyStatus.crota.level30.steps > 0}">
-											</div>
-											<div class="activity-details">
-												<div class="activity-name">
-													Crota's End </div>
-												<div class="activity-level">
-													Level <strong>30</strong>
-												</div>
-											</div>
-										</div>
-
-										<div class="weekly-activity">
-											<div class="activity-icon">
-												<img src="https://www.bungie.net/common/destiny_content/icons/7b25eb30fc5e93493eada0c15871192a.png" ng-class="{'completed': item.weeklyStatus.crota.level33.steps > 0}" >
-											</div>
-											<div class="activity-details">
-												<div class="activity-name">
-													Crota's End </div>
-												<div class="activity-level">
-													Level <strong>33</strong>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-				<div class="character vault">
-					<div ng-click="selectOwner('vault')" class="character-card ng-class:{'selected': selectedOwner == 'vault'}">
-						<!--<img class="character-emblem" ng-src="https://bungie.net{{ item.icon }}" />-->
-						<div class="character-class">Vault
-						<span class="bounce" ng-if="searchText.length && (inventory | filter:{$:searchText, owner: 'vault' }).length > 0"><i class="fa fa-arrow-left"></i></span>
-						</div>
-						<!--<div class="character-level">{{ item.level }}</div>-->
-
-						<div class="top-right-triangle"></div>
-						<div class="bottom-right-triangle"></div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-8">
-				<div class="row bucket-group">
-					<div class="col-xs-12">
-						<div class="bucket-title">Weapons</div>
-					</div>
-					<div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in weaponGrouping">
-						<div class="bucket-subtitle">{{ group }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Weapons', bucket: group, owner: selectedOwner} | customFilter:filters | orderBy: ['-equipped','order', 'tier', 'name']" popover="{{ item.name }}" popover-title="{{ item.type }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader title="{{item}}">
-							<img class="item-icon" local-image />
+                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.crota.level33.steps > 0}"></i><strong>Hard</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="character vault">
+          <div ng-click="selectOwner('vault')" class="character-card ng-class:{'selected': selectedOwner == 'vault'}">
+            <!--<img class="character-emblem" ng-src="https://bungie.net{{ item.icon }}" />-->
+            <div class="character-class">Vault
+              <span class="bounce" ng-if="searchText.length && (inventory | filter:{$:searchText, owner: 'vault' }).length > 0">
+									<i class="fa fa-arrow-left"></i>
+								</span>
+            </div>
+            <!--<div class="character-level">{{ item.level }}</div>-->
+            <div class="top-right-triangle"></div>
+            <div class="bottom-right-triangle"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="row bucket-group">
+          <div class="col-xs-12">
+            <div class="bucket-title">Weapons</div>
+          </div>
+          <div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in weaponGrouping">
+            <div class="bucket-subtitle">{{ group }}</div>
+            <div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Weapons', bucket: group, owner: selectedOwner} | customFilter:filters | orderBy: ['-equipped','order', 'tier', 'name']" popover="{{ item.name }}" popover-title="{{ item.type }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader title="{{item}}">
+              <img class="item-icon" local-image />
               <div class="item-xp-bar" ng-if="!item.complete" style="width: {{ getXPWidth(item) }}%"></div>
-							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
-							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
-							<span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
-                  <img ng-if="item.damageType == 2" src="images/arc.png" />
-                  <img ng-if="item.damageType == 3" src="images/solar.png" />
-                  <img ng-if="item.damageType == 4" src="images/void.png" />
-                </span>
-						</div>
-					</div>
-				</div>
-
-				<div class="row  bucket-group">
-					<div class="col-xs-12">
-						<div class="bucket-title">Armor</div>
-					</div>
-					<div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in armorGrouping">
-						<div class="bucket-subtitle">{{ group }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Armor', bucket: group, owner: selectedOwner } | customFilter:filters | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" popover-title="{{ item.type }}" ng-click="openModal(item)" loader>
-							<img class="item-icon" local-image />
-							<div class="item-xp-bar" ng-if="!item.complete && item.primStat !== undefined" style="width: {{ getXPWidth(item) }}%"></div>
-							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
-							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
-							<span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
-                  <img ng-if="item.damageType == 2" src="images/arc.png" />
-                  <img ng-if="item.damageType == 3" src="images/solar.png" />
-                  <img ng-if="item.damageType == 4" src="images/void.png" />
-                </span>
-						</div>
-					</div>
-				</div>
-
-				<div class="row  bucket-group">
-					<div class="col-xs-12">
-						<div class="bucket-title">Misc</div>
-					</div>
-					<div class="col-xs-6" ng-repeat="(key2, value2) in inventory | itemDisplay: 'Misc' | groupBy: 'bucket' ">
-						<div class="bucket-subtitle">{{ key2 }}</div>
-						<div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in value2 | filter: {owner: selectedOwner } | customFilter:filters | orderBy: ['order','tier', 'name']" ng-click="openModal(item)" popover="{{ item.name }}" popover-trigger="mouseenter" loader popover-title="{{ item.type }}">
-							<img class="item-icon" local-image />
-							<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
-							<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
-							<span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
-                  <img ng-if="item.damageType == 2" src="images/arc.png" />
-                  <img ng-if="item.damageType == 3" src="images/solar.png" />
-                  <img ng-if="item.damageType == 4" src="images/void.png" />
-                </span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="bottomTabs" tab-panel>
-		<div id="tabHandles">
-			<div class="tab-handle" id="tab1Handle" tabname="favoritesTab">Favorites <span class="badge">{{ (inventory | filter: { favorite: true }).length }}</span>
-			</div>
-			<div class="tab-handle" id="tab2Handle" tabname="currencyTab">Currency</div>
-			<div class="tab-handle" id="tab2Handle" tabname="filtersTab">Filters <span class="badge">
-				{{ utils.countFilters(filters) }}
-			</span></div>
-			<div class="tab-handle" id="tab3Handle" tabname="loadoutsTab">Loadouts</div>
-		</div>
-		<div id="tabContainer">
-			<div id="favoritesTab" class="bottom-tab">
-				<div ng-model="favorites">
-					<div class="item favorite ng-class:{ 'full': item.complete }" ng-repeat="item in inventory | filter: { favorite: true } | orderBy: ['tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader popover-title="{{ item.type }}">
-						<img class="item-icon" local-image />
-						<div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }} </div>
-						<span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
-						<span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
-                  <img ng-if="item.damageType == 2" src="images/arc.png" />
-                  <img ng-if="item.damageType == 3" src="images/solar.png" />
-                  <img ng-if="item.damageType == 4" src="images/void.png" />
-                </span>
-					</div>
-				</div>
-			</div>
-			<div id="filtersTab" class="bottom-tab">
-			  <div class="row">
-			    <div class="col-sm-3">
+              <div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }}</div>
+              <span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
+              <span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
+									<img ng-if="item.damageType == 2" src="images/arc.png" />
+									<img ng-if="item.damageType == 3" src="images/solar.png" />
+									<img ng-if="item.damageType == 4" src="images/void.png" />
+								</span>
+            </div>
+          </div>
+        </div>
+        <div class="row  bucket-group">
+          <div class="col-xs-12">
+            <div class="bucket-title">Armor</div>
+          </div>
+          <div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in armorGrouping">
+            <div class="bucket-subtitle">{{ group }}</div>
+            <div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Armor', bucket: group, owner: selectedOwner } | customFilter:filters | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" popover-title="{{ item.type }}" ng-click="openModal(item)" loader>
+              <img class="item-icon" local-image />
+              <div class="item-xp-bar" ng-if="!item.complete && item.primStat !== undefined" style="width: {{ getXPWidth(item) }}%"></div>
+              <div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }}</div>
+              <span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
+              <span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
+									<img ng-if="item.damageType == 2" src="images/arc.png" />
+									<img ng-if="item.damageType == 3" src="images/solar.png" />
+									<img ng-if="item.damageType == 4" src="images/void.png" />
+								</span>
+            </div>
+          </div>
+        </div>
+        <div class="row  bucket-group">
+          <div class="col-xs-12">
+            <div class="bucket-title">Misc</div>
+          </div>
+          <div class="col-xs-6" ng-repeat="(key2, value2) in inventory | itemDisplay: 'Misc' | groupBy: 'bucket' ">
+            <div class="bucket-subtitle">{{ key2 }}</div>
+            <div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in value2 | filter: {owner: selectedOwner } | customFilter:filters | orderBy: ['order','tier', 'name']" ng-click="openModal(item)" popover="{{ item.name }}" popover-trigger="mouseenter" loader popover-title="{{ item.type }}">
+              <img class="item-icon" local-image />
+              <div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }}</div>
+              <span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
+              <span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
+									<img ng-if="item.damageType == 2" src="images/arc.png" />
+									<img ng-if="item.damageType == 3" src="images/solar.png" />
+									<img ng-if="item.damageType == 4" src="images/void.png" />
+								</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="bottomTabs" tab-panel>
+    <div id="tabHandles">
+      <div class="tab-handle" tabname="favoritesTab">Favorites
+        <span class="badge">{{ (inventory | filter: { favorite: true }).length }}</span>
+      </div>
+      <div class="tab-handle" tabname="currencyTab">Currency</div>
+      <div class="tab-handle" tabname="filtersTab">Filters
+        <span class="badge">{{ utils.countFilters(filters) }}</span>
+      </div>
+      <div class="tab-handle hide" tabname="loadoutsTab">Loadouts</div>
+    </div>
+    <div id="tabContainer">
+      <div id="favoritesTab" class="bottom-tab">
+        <div ng-model="favorites">
+          <div class="item favorite ng-class:{ 'full': item.complete }" ng-repeat="item in inventory | filter: { favorite: true } | orderBy: ['tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader popover-title="{{ item.type }}">
+            <img class="item-icon" local-image />
+            <div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }}</div>
+            <span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
+            <span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
+								<img ng-if="item.damageType == 2" src="images/arc.png" />
+								<img ng-if="item.damageType == 3" src="images/solar.png" />
+								<img ng-if="item.damageType == 4" src="images/void.png" />
+							</span>
+          </div>
+        </div>
+      </div>
+      <div id="filtersTab" class="bottom-tab">
+        <div class="row">
+          <div class="col-sm-3">
             <div class="filter-title">Search Filter</div>
-            <div><input type="search" id="searchBox" placeholder="type to filter" ng-model="filters.searchText" class="search-box form-control" /></div>
-			    </div>
-			    <div class="col-sm-3">
+            <div>
+              <input type="search" id="searchBox" placeholder="type to filter" ng-model="filters.searchText" class="search-box form-control" />
+            </div>
+          </div>
+          <div class="col-sm-3">
             <div class="filter-title">Damage Type</div>
             <img src="images/arc.png" class="damage-filter thirdOpacity ng-class:{'fullOpacity':filters.isArc}" ng-click="filters.isArc = !filters.isArc" />&nbsp;
             <img src="images/void.png" class="damage-filter thirdOpacity ng-class:{'fullOpacity':filters.isVoid}" ng-click="filters.isVoid = !filters.isVoid" />&nbsp;
             <img src="images/solar.png" class="damage-filter thirdOpacity ng-class:{'fullOpacity':filters.isSolar}" ng-click="filters.isSolar = !filters.isSolar" />
-			    </div>
-			  </div>
-			</div>
-			<div id="loadoutsTab" class="bottom-tab">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="loadout" ng-repeat="loadout in loadouts">
-							<img ng-repeat="g in loadout.gear" ng-src="https://bungie.net{{ getItemIcon(g.itemHash) }}" />
-							<div class="loadout-name clear">{{ loadout.name }}</div>
-						</div>
-					</div>
-				</div>				
-			</div>
-			<div id="currencyTab" class="bottom-tab">
-				<div class="row total-currencies" ng-if="showCurrencies">
-					<div class="col-xs-12">
-						<div class="currency-container clearfix">
-							<div ng-repeat="item in currencies" class="item currency">
-								<img local-image class="item-icon" ng-src="https://bungie.net{{ item.icon }}" class="img-responsive" />
-								<span class="quantity">{{ item.amount }}</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- build:js scripts/vendor.js -->
-	<!-- bower:js -->
-	<script src="bower_components/jquery/dist/jquery.js"></script>
-	<script src="bower_components/angular/angular.js"></script>
-	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-	<script src="bower_components/angular-cookies/angular-cookies.js"></script>
-	<script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
-	<script src="bower_components/angular-rangeslider/angular.rangeSlider.js"></script>
-	<!-- endbower -->
-	<!-- endbuild -->
-
-	<script type="text/javascript" src="scripts/vendor/ui.js"></script>
-	<script type="text/javascript" src="bower_components/angular-filter/dist/angular-filter.js"></script>
-	<script type="text/javascript" src="scripts/vendor/ui-bootstrap-tpls.min.js"></script>
-	<script type="text/javascript" src="scripts/app.js"></script>
-	<script type="text/javascript" src="scripts/controllers/MainCtrl.js"></script>
-	<script type="text/javascript" src="scripts/controllers/ItemModalCtrl.js"></script>
-	<script type="text/javascript" src="scripts/controllers/QuantityCtrl.js"></script>
-	<script type="text/javascript" src="scripts/util/bungie.js"></script>
-	<script type="text/javascript" src="scripts/util/utils.js"></script>
-	<script type="text/javascript" src="scripts/util/itemdef2.json"></script>
-	<script type="text/javascript" src="scripts/util/collection.json"></script>
-	<script type="text/javascript" src="scripts/util/statdef.json"></script>
-	<script type="text/javascript" src="scripts/filters/filters.js"></script>
-	<script type="text/javascript" src="scripts/directives/directives.js"></script>
-
-	<!-- build:js scripts/options.js -->
-	
-	<!-- endbuild -->
+          </div>
+        </div>
+      </div>
+      <div id="loadoutsTab" class="bottom-tab">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="loadout" ng-repeat="loadout in loadouts">
+              <img ng-repeat="g in loadout.gear" ng-src="https://bungie.net{{ getItemIcon(g.itemHash) }}" />
+              <div class="loadout-name clear">{{ loadout.name }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="currencyTab" class="bottom-tab">
+        <div class="row total-currencies" ng-if="showCurrencies">
+          <div class="col-xs-12">
+            <div class="currency-container clearfix">
+              <div ng-repeat="item in currencies" class="item currency">
+                <img local-image class="item-icon" ng-src="https://bungie.net{{ item.icon }}" class="img-responsive" />
+                <span class="quantity">{{ item.amount }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- build:js scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+  <script src="bower_components/angular-rangeslider/angular.rangeSlider.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+  <script type="text/javascript" src="scripts/vendor/ui.js"></script>
+  <script type="text/javascript" src="bower_components/angular-filter/dist/angular-filter.js"></script>
+  <script type="text/javascript" src="scripts/vendor/ui-bootstrap-tpls.min.js"></script>
+  <script type="text/javascript" src="scripts/app.js"></script>
+  <script type="text/javascript" src="scripts/controllers/MainCtrl.js"></script>
+  <script type="text/javascript" src="scripts/controllers/ItemModalCtrl.js"></script>
+  <script type="text/javascript" src="scripts/controllers/QuantityCtrl.js"></script>
+  <script type="text/javascript" src="scripts/util/bungie.js"></script>
+  <script type="text/javascript" src="scripts/util/utils.js"></script>
+  <script type="text/javascript" src="scripts/util/itemdef2.json"></script>
+  <script type="text/javascript" src="scripts/util/collection.json"></script>
+  <script type="text/javascript" src="scripts/util/statdef.json"></script>
+  <script type="text/javascript" src="scripts/filters/filters.js"></script>
+  <script type="text/javascript" src="scripts/directives/directives.js"></script>
+  <!-- build:js scripts/options.js -->
+  <!-- endbuild -->
 </body>
 
 </html>
