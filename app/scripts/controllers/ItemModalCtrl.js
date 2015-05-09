@@ -25,6 +25,8 @@ myApp.controller('ModalCtrl', function ($scope, bungie, $modalInstance, item, ch
 				return;
 
 			var nodes = result.data.talentNodes;
+
+      console.log(nodes);
 			var gridHash = result.data.item.talentGridHash;
       var hashDefs = result.definitions.talentGrids[gridHash];
 

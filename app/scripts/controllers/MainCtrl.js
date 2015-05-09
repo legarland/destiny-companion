@@ -48,17 +48,23 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
   ]
  }
 ]
-  
+
   $scope.getXPWidth = function (item) {
-    var max = item.primaryStatMax;
-    var min = item.primaryStatMin;
-    var act = item.primStat.value;
-    var progress = act - min;
-    var total = max - min;
-    var perc = progress/total;
-    return perc * 100;
+    bungie.getItem(item.owner, item.id, function (result) {
+      if (result === undefined || result.data.talentNodes === undefined)
+        return;
+      var nodes = result.data.talentNodes;
+      var totalNodePercent = nodes.length * 100;
+      var userNodePercent = 0;
+      for (var x = 0; x < nodes.length; x++) {
+        var n = nodes[x];
+        userNodePercent += n.progressPercent;
+      }
+      item.percentComplete = (userNodePercent / totalNodePercent) * 100;
+    });
   }
-  
+
+
   $scope.toggleCurrencies = function () {
     $scope.showCurrencies = !$scope.showCurrencies;
   }
@@ -414,10 +420,6 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
         user.vanguardMarks = currencies[2].value;
         user.crucibleMarks = currencies[1].value;
 
-        bungie.activityHistory(c, function (data) {
-          console.log(data);
-        })
-
         //$scope.$apply();
       });
 
@@ -432,6 +434,7 @@ myApp.controller('MainController', function ($scope, bungie, utils, $filter, $ti
 
     });
   }
+
 
   function loadFavorites() {
     var favs = localStorage.favs

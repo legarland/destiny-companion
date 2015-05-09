@@ -127,9 +127,9 @@
           </div>
           <div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in weaponGrouping">
             <div class="bucket-subtitle">{{ group }}</div>
-            <div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Weapons', bucket: group, owner: selectedOwner} | customFilter:filters | orderBy: ['-equipped','order', 'tier', 'name']" popover="{{ item.name }}" popover-title="{{ item.type }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader title="{{item}}">
+            <div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Weapons', bucket: group, owner: selectedOwner} | customFilter:filters | orderBy: ['-equipped','order', 'tier', 'name']" popover="{{ item.name }}" popover-title="{{ item.type }}" popover-trigger="mouseenter" ng-click="openModal(item)" loader title="{{item}}" ng-init="getXPWidth(item)">
               <img class="item-icon" local-image />
-              <div class="item-xp-bar" ng-if="!item.complete" style="width: {{ getXPWidth(item) }}%"></div>
+              <div class="item-xp-bar" ng-if="!item.complete" style="width: {{ item.percentComplete || 0 }}%"></div>
               <div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }}</div>
               <span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
               <span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">
@@ -146,9 +146,9 @@
           </div>
           <div ng-class="{'col-xs-12':selectedOwner=='', 'col-xs-4':selectedOwner!=''}" ng-repeat="group in armorGrouping">
             <div class="bucket-subtitle">{{ group }}</div>
-            <div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Armor', bucket: group, owner: selectedOwner } | customFilter:filters | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" popover-title="{{ item.type }}" ng-click="openModal(item)" loader>
+            <div class="item ng-class:{ 'full': item.complete, 'equipped': item.equipped }" ng-repeat="item in inventory | filter: {displayBucket: 'Armor', bucket: group, owner: selectedOwner } | customFilter:filters | orderBy: ['-equipped', 'order', 'tier', 'name']" popover="{{ item.name }}" popover-trigger="mouseenter" popover-title="{{ item.type }}" ng-click="openModal(item)" loader  ng-init="getXPWidth(item)">
               <img class="item-icon" local-image />
-              <div class="item-xp-bar" ng-if="!item.complete && item.primStat !== undefined" style="width: {{ getXPWidth(item) }}%"></div>
+              <div class="item-xp-bar" ng-if="!item.complete" style="width: {{ item.percentComplete || 0 }}%"></div>
               <div ng-if="item.primStat.statHash == 368428387" class="attack">{{ item.primStat.value }}</div>
               <span class="quantity" ng-if="item.amount > 1">{{ item.amount }}</span>
               <span class="damage" ng-if="item.bucket.indexOf('Weapons') != -1">

@@ -174,7 +174,6 @@ a, [ng-click] { cursor: pointer }
   height: 6px;
   background-color: limegreen;
   bottom: 0;
-  display: none;
 }
 
 .item .attack {
