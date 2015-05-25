@@ -65,18 +65,18 @@
                   <div class="weekly-info">
                     <div class="weekly-activity">
                       <div class="activity-name">Heroic Strike</div>
-                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.heroic.level24}"></i><strong>24</strong>
+                      <div class="activity-level"><i class="activity-status fa ng-class:{'fa-check': item.weeklyStatus.heroic.level24, 'fa-close': !item.weeklyStatus.heroic.level24}"></i><strong>24</strong>
                       </div>
 
-                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.heroic.level28}"></i><strong>28</strong>
+                      <div class="activity-level"><i class="activity-status fa ng-class:{'fa-check': item.weeklyStatus.heroic.level28, 'fa-close': !item.weeklyStatus.heroic.level28}"></i><strong>28</strong>
                       </div>
 
-                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.heroic.level30}"></i><strong>30</strong>
+                      <div class="activity-level"><i class="activity-status fa ng-class:{'fa-check': item.weeklyStatus.heroic.level30, 'fa-close': !item.weeklyStatus.heroic.level30}"></i><strong>30</strong>
                       </div>
                     </div>
                     <div class="weekly-activity">
                       <div class="activity-name">Nightfall Strike</div>
-                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.nightfall}"></i><strong>30</strong>
+                      <div class="activity-level"><i class="activity-status fa ng-class:{'fa-check': item.weeklyStatus.nightfall, 'fa-close': !item.weeklyStatus.nightfall}"></i><strong>30</strong>
                       </div>
                     </div>
                   </div>
@@ -85,16 +85,16 @@
                   <div class="weekly-info">
                     <div class="weekly-activity">
                       <div class="activity-name">Vault of Glass</div>
-                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.vault.level26.steps > 0}"></i><strong>Normal</strong>
+                      <div class="activity-level"><i class="activity-status fa ng-class:{'fa-check': item.weeklyStatus.vault.level26.steps > 0, 'fa-close': item.weeklyStatus.vault.level26.steps == 0}"></i><strong>Normal</strong>
                       </div>
 
-                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.vault.level30.steps > 0}"></i><strong>Hard</strong>
+                      <div class="activity-level"><i class="activity-status fa ng-class:{'fa-check': item.weeklyStatus.vault.level30.steps > 0, 'fa-close': item.weeklyStatus.vault.level30.steps == 0}"></i><strong>Hard</strong>
                       </div>
                     </div>
 
                     <div class="weekly-activity">
                       <div class="activity-name">Crota's End</div>
-                      <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.crota.level30.steps > 0}"></i><strong>Normal</strong>
+                      <div class="activity-level"><i class="activity-status fa ng-class:{'fa-check': item.weeklyStatus.crota.level30.steps > 0, 'fa-close': item.weeklyStatus.crota.level30.steps == 0}"></i><strong>Normal</strong>
                       </div>
 
                       <div class="activity-level"><i class="activity-status fa fa-close ng-class:{'fa-check': item.weeklyStatus.crota.level33.steps > 0}"></i><strong>Hard</strong>
